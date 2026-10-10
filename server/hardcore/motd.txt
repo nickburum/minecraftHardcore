@@ -1,0 +1,4 @@
+# Server list description (MOTD). Two lines, using § color codes.
+# tools/make_server_icons.py turns this into the preview; see README for server.properties.
+§4§l☠ HARDCORE ☠ §8» §cOne life. Make it count.
+§6❤ §eFallen champions can return with the Elixir of Life

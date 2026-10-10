@@ -1,6 +1,22 @@
 # minecraftHardcore
 
-Add-ons for the hardcore server.
+Add-ons for the hardcore server, plus server-list branding for the hardcore and creative servers.
+
+## Server list icons and descriptions
+
+| Server | Preview |
+|---|---|
+| Hardcore | ![Hardcore server in the server list](server/hardcore/preview.png) |
+| Creative | ![Creative server in the server list](server/creative/preview.png) |
+
+Each folder under `server/` holds:
+- `server-icon.png`: the 64×64 icon. Copy it into the server's main folder (next to `server.properties`) with exactly that name.
+- `motd.properties`: the description line. Replace the `motd=` line in `server.properties` with it. Special characters are escaped so they display correctly.
+- `motd.txt`: the same description in readable form, for editing.
+
+Restart the server afterwards; both are only read at startup.
+
+To change the text, edit `motd.txt` and run `python3 tools/make_server_icons.py <path to a Minecraft client .jar>`. That rebuilds the icons, previews and `motd.properties`, and warns if a line is too long to fit.
 
 ## Elixir of Life
 
@@ -88,6 +104,8 @@ datapack/elixir_of_life/       the data pack
   overlay_26_3/                26.3 versions of the advancements, loot tables and item modifier
 resourcepack/elixir_of_life_sounds/   announcer voice lines
 tools/make_voices.py           makes the voice lines and builds dist/*.zip
+tools/make_server_icons.py     makes the server icons, MOTD lines and previews
+server/hardcore, server/creative   server-list icon and description for each server
 tests/                         end-to-end test with bot players
 ```
 

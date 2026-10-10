@@ -1,0 +1,4 @@
+# Server list description (MOTD). Two lines, using § color codes.
+# tools/make_server_icons.py turns this into the preview; see README for server.properties.
+§a§l★ CREATIVE ★ §8» §bBuild without limits
+§7Unlimited blocks, endless ideas. §fBuild together!

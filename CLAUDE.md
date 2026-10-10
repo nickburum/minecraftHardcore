@@ -1,6 +1,6 @@
 # Notes for Claude Code
 
-This repo holds add-ons for a Minecraft **Java Edition** hardcore server. The main piece is the Elixir of Life data pack (see README.md for what it does).
+This repo holds add-ons for a Minecraft **Java Edition** hardcore server. The main piece is the Elixir of Life data pack (see README.md for what it does). It also has the server-list icon and description for both the hardcore and the creative server, in `server/`.
 
 If you are running on the game server and were asked to install it, follow the steps below. Ask the owner before restarting the server or changing `server.properties`, because players may be online.
 
@@ -28,6 +28,15 @@ If you are running on the game server and were asked to install it, follow the s
 7. **Smoke test** (console or RCON):
    - `function elixir:admin/list` should print empty Fallen and Pending lists.
    - `give <op> minecraft:golden_apple` and `give <op> minecraft:potion[potion_contents={potion:"minecraft:weakness"}]`. Then have the operator craft the elixir and right-click it. It should say "No fallen champions await revival."
+
+## Server icon and description
+
+Do this for each server you are asked to set up: the hardcore server uses `server/hardcore/` and the creative server uses `server/creative/`. Only the hardcore server gets the data pack.
+
+1. Copy `server/<name>/server-icon.png` into the server directory, next to `server.properties`, keeping that exact file name. Back up any existing `server-icon.png` first.
+2. In `server.properties`, replace the `motd=` line with the `motd=` line from `server/<name>/motd.properties`. Copy it exactly, including the `\u00A7` escapes.
+3. Both take effect on the next restart. Ask the owner before restarting.
+4. Check it: the server should show the new icon and description in the multiplayer list.
 
 ## Updating
 

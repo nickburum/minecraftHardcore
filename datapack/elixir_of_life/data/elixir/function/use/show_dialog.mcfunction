@@ -1,0 +1,2 @@
+# Macro: buttons (list of dialog action buttons, one per fallen player).
+$dialog show @s {type:"minecraft:multi_action",title:{text:"Elixir of Life",color:"gold",bold:true},body:{type:"minecraft:plain_message",contents:{text:"Choose a fallen champion to return to the realm.\nThe elixir is used up when you choose.",color:"gray"}},actions:$(buttons),columns:1,exit_action:{label:{text:"Cancel"},width:200},pause:false}

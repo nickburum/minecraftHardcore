@@ -1,0 +1,26 @@
+{
+  "criteria": {
+    "crafted": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipes": "elixir:elixir_of_life",
+        "ingredients": [
+          {
+            "items": "minecraft:potion",
+            "predicates": {
+              "minecraft:potion_contents": {
+                "potions": [
+                  "minecraft:weakness",
+                  "minecraft:long_weakness"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "function": "elixir:craft/crafted_valid"
+  }
+}

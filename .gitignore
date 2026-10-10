@@ -1,0 +1,5 @@
+tools/.cache/
+dist/
+__pycache__/
+tests/node_modules/
+tests/package-lock.json

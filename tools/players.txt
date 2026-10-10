@@ -1,0 +1,5 @@
+# Players who get their name spoken in the resurrection announcement.
+# One Minecraft name per line. Add "=how to say it" if the voice
+# mispronounces a name, for example:
+#   xX_DragonSlayer_Xx=Dragon Slayer
+# Then run: python3 tools/make_voices.py

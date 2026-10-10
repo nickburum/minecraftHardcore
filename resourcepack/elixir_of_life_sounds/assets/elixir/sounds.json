@@ -1,0 +1,20 @@
+{
+  "announcer.fallen": {
+    "subtitle": "subtitles.elixir.announcer.fallen",
+    "sounds": [
+      {
+        "name": "elixir:announcer/fallen",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "announcer.revived": {
+    "subtitle": "subtitles.elixir.announcer.revived",
+    "sounds": [
+      {
+        "name": "elixir:announcer/revived",
+        "attenuation_distance": 64
+      }
+    ]
+  }
+}

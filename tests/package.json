@@ -1,0 +1,7 @@
+{
+  "name": "elixir-of-life-tests",
+  "private": true,
+  "description": "End-to-end test: two bot players on a real hardcore server",
+  "scripts": {"test": "node e2e.js"},
+  "dependencies": {"mineflayer": "^4.39.0"}
+}

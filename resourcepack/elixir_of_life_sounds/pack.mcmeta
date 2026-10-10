@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": [
+      {"text": "Elixir of Life", "color": "gold", "bold": true},
+      {"text": "\nAnnouncer voice lines", "color": "gray"}
+    ],
+    "min_format": 69,
+    "max_format": 97
+  }
+}

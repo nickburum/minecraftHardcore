@@ -1,0 +1,13 @@
+{
+  "criteria": {
+    "crafted": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipes": "elixir:elixir_of_life"
+      }
+    }
+  },
+  "rewards": {
+    "function": "elixir:craft/crafted_any"
+  }
+}

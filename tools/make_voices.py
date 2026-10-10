@@ -42,6 +42,8 @@ LINES = {
 NAMED_LINE = "System message. A resurrection has occurred. The champion, {spoken}, has returned to the realm."
 
 # Slightly deeper voice with a hall echo, so it sounds like an announcer.
+# Output is stereo: Minecraft plays stereo sounds without direction or distance
+# falloff, so the announcer sounds the same everywhere, from every direction.
 FILTER = (
     "asetrate=22050*0.94,aresample=44100,atempo=1.0/0.94*0.95,"
     "aecho=0.8:0.6:60|120:0.25|0.12,"
@@ -70,7 +72,7 @@ def synth(text, out_ogg, onnx):
         )
         subprocess.run(
             ["ffmpeg", "-y", "-loglevel", "error", "-i", str(wav), "-af", FILTER,
-             "-ac", "1", "-ar", "44100", "-c:a", "libvorbis", "-q:a", "6", str(out_ogg)],
+             "-ac", "2", "-ar", "44100", "-c:a", "libvorbis", "-q:a", "6", str(out_ogg)],
             check=True,
         )
 
@@ -108,7 +110,7 @@ def make_voices():
         synth(text, SOUNDS_DIR / f"{key}.ogg", onnx)
         sounds[f"announcer.{key}"] = {
             "subtitle": f"subtitles.elixir.announcer.{key}",
-            "sounds": [{"name": f"elixir:announcer/{key}", "attenuation_distance": 64}],
+            "sounds": [{"name": f"elixir:announcer/{key}"}],
         }
 
     names = {}
@@ -119,7 +121,7 @@ def make_voices():
         synth(text, SOUNDS_DIR / f"revived_{key}.ogg", onnx)
         sounds[f"announcer.revived.{key}"] = {
             "subtitle": "subtitles.elixir.announcer.revived",
-            "sounds": [{"name": f"elixir:announcer/revived_{key}", "attenuation_distance": 64}],
+            "sounds": [{"name": f"elixir:announcer/revived_{key}"}],
         }
         names[name] = key
 

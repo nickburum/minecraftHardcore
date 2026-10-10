@@ -12,5 +12,6 @@ function elixir:death/unregister with storage elixir:tmp req
 gamemode survival @s
 function elixir:revive/teleport
 function elixir:revive/protect
-execute at @s run function elixir:revive/notify_player
+# Announce to everyone first, so the revived player's own notice replaces it on their screen.
 function elixir:announce/revived
+execute at @s run function elixir:revive/notify_player

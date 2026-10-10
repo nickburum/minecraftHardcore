@@ -8,8 +8,10 @@ A data pack that lets players bring fallen champions back in a hardcore world, p
 
 - **Elixir of Life.** Craft it from a Golden Apple and a Potion of Weakness. Right-click it to open a menu of fallen players, then pick one to revive.
 - **Revival.** The player comes out of spectator mode at their spawn point (bed, respawn anchor or `/spawnpoint`). They get 15 seconds of protection and a notice saying who revived them.
-- **Death announcement.** Everyone hears a cannon shot, then the announcer says *"System message. A champion has fallen."* A title and a chat message name the fallen player.
-- **Resurrection announcement.** Everyone hears an angelic chime, then the announcer says *"System message. A resurrection has occurred…"* followed by *"…the champion has returned to the realm."* A title and a chat message name the player.
+- **Death announcement.** Everyone hears a cannon shot, then the announcer says *"System message. A champion has fallen."* A message also appears in small text just below the crosshair, the player's name shows in the action bar, and chat names them too.
+- **Resurrection announcement.** Everyone hears an angelic chime, then the announcer says *"System message. A resurrection has occurred…"* followed by *"…the champion has returned to the realm."* The on-screen text works the same way as for a death.
+
+Announcements are heard by every player on the server at full volume. The voice lines are stereo, so they sound the same from every direction instead of coming from one spot.
 
 ### Supported versions
 
@@ -53,7 +55,7 @@ Build the zips with `python3 tools/make_voices.py --build`. The command also pri
 3. Click a name. The elixir is used up, and that player:
    - goes back to Survival at their bed or respawn anchor. If those are gone, they go to the fallback spawn.
    - gets Resistance V, Slow Falling, Fire Resistance, Water Breathing and Regeneration, so the fall, lava or water where they land can't kill them right away.
-   - sees "You Have Been Revived" with the reviver's name.
+   - sees "You Have Been Revived" below the crosshair, with the reviver's name in the action bar.
 4. Offline players can be revived too. They return the next time they join.
 
 A dead hardcore player has to click **Spectate World** on the death screen before they can be revived.

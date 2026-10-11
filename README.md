@@ -19,6 +19,10 @@ Restart the server afterwards; both are only read at startup.
 
 To change the text, edit `motd.txt` and run `python3 tools/make_server_icons.py <path to a Minecraft client .jar>`. That rebuilds the icons, previews and `motd.properties`, and warns if a line is too long to fit.
 
+## RivalBot and Race the Bot
+
+A free bot (`rivalbot/`) that plays survival like a real player on the mod test server, learns from its deaths, and races you to the End. In the race data pack (`datapack/rival_race`), the System announcer roots for the bot and sabotages you. See [rivalbot/README.md](rivalbot/README.md) for what it can do so far and how to run it.
+
 ## Challenge: Minecraft, but my health is my inventory
 
 A data pack for recording challenge videos, made for the mod test server.

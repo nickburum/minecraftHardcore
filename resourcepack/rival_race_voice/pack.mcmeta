@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": [
+      {"text": "Bot Race", "color": "aqua", "bold": true},
+      {"text": "\nThe System announcer", "color": "gray"}
+    ],
+    "min_format": 69,
+    "max_format": 97
+  }
+}

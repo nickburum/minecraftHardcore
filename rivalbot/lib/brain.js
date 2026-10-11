@@ -25,10 +25,10 @@ class Brain {
     return [
       { name: 'wood', done: () => s.has('wooden_pickaxe') || s.has('stone_pickaxe') || s.logCount() + s.plankCount() / 4 >= 5, run: () => s.collect(LOGS, 6, { label: 'logs' }), milestone: 'wood' },
       { name: 'wooden pickaxe', done: () => s.has('wooden_pickaxe') || s.has('stone_pickaxe') || s.has('iron_pickaxe'), run: () => s.craftTool('wooden_pickaxe') },
-      { name: 'stone', done: () => s.has('stone_pickaxe') || s.count('cobblestone') >= 16, run: () => s.collect(['stone', 'cobblestone'], 16, { exposedOnly: true, label: 'stone' }) },
+      { name: 'stone', done: () => s.has('stone_pickaxe') || s.count(['cobblestone', 'cobbled_deepslate']) >= 16, run: () => s.getStone(16) },
       { name: 'stone tools', done: () => (s.has('stone_pickaxe') || s.has('iron_pickaxe')) && (s.has('stone_sword') || s.has('iron_sword')) && s.has('stone_axe'), run: async () => { await s.craftTool('stone_pickaxe'); await s.craftTool('stone_sword'); await s.craftTool('stone_axe') }, milestone: 'stone' },
       { name: 'food', done: () => s.count(FOODS) >= 6, run: () => s.hunt() },
-      { name: 'furnace', done: () => s.has('furnace') || s.findBlocks(['furnace'], 24, 1).length > 0, run: async () => { if (s.count('cobblestone') < 8) await s.collect(['stone', 'cobblestone'], 8, { exposedOnly: true, label: 'stone' }); await s.craft('furnace', 1) } },
+      { name: 'furnace', done: () => s.has('furnace') || s.findBlocks(['furnace'], 24, 1).length > 0 || this.memory.data.skills.furnace?.ok > 0 && !s.has('raw_iron') && !Object.keys(RAW_TO_COOKED).some(r => s.has(r)), run: async () => { if (s.count('cobblestone') < 8) await s.getStone(8); await s.craft('furnace', 1) } },
       { name: 'cook food', done: () => !Object.keys(RAW_TO_COOKED).some(r => s.has(r)), run: async () => { await s.nearbyOrPlaced('furnace', 'furnace'); await s.cookFood() } },
       {
         name: 'iron',
@@ -74,6 +74,7 @@ class Brain {
       try {
         await step.run()
         if (step.done()) {
+          this.failStreak = 0
           this.memory.skill(step.name, true, (Date.now() - t) / 1000)
           log('done:', step.name)
           if (step.milestone) this.say.event(step.milestone)
@@ -82,8 +83,11 @@ class Brain {
         if (e instanceof Interrupted || this.skills.interrupted) { while (this.reflexBusy) await sleep(300); continue }
         this.memory.skill(step.name, false)
         log(`failed: ${step.name}:`, e.message)
-        await sleep(1000)
-        try { await this.skills.explore(32) } catch (e2) {}
+        // Back off when the same step keeps failing, and try somewhere new.
+        this.failStreak = step.name === this.lastFailed ? (this.failStreak || 0) + 1 : 1
+        this.lastFailed = step.name
+        await sleep(Math.min(30000, 1000 * this.failStreak))
+        try { await this.skills.explore(32 + 16 * Math.min(this.failStreak, 6)) } catch (e2) {}
       }
     }
   }

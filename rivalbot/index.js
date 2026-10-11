@@ -43,8 +43,11 @@ function start () {
     moves.allow1by1towers = true
     moves.allowParkour = true
     moves.scafoldingBlocks = ['dirt', 'cobblestone', 'cobbled_deepslate', 'netherrack'].map(n => bot.registry.itemsByName[n]?.id).filter(Boolean)
-    if (memory.style.avoidLava) moves.liquidCost = 100
+    // Walk around water instead of through it (the bot drowned taking shortcuts through lakes).
+    moves.liquidCost = memory.style.avoidLava ? 100 : 20
     bot.pathfinder.setMovements(moves)
+    bot.pathfinder.thinkTimeout = 15000 // trees and caves need longer than the 5 s default
+    bot.pathfinder.tickTimeout = 40
     bot.pvp.movements = moves
     if (bot.collectBlock.movements !== undefined) bot.collectBlock.movements = moves
 

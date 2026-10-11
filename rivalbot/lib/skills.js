@@ -4,7 +4,9 @@ const { Vec3 } = require('vec3')
 const { goals } = require('mineflayer-pathfinder')
 const { log } = require('./log')
 
-const LOGS = ['oak_log', 'birch_log', 'spruce_log', 'jungle_log', 'acacia_log', 'dark_oak_log', 'mangrove_log', 'cherry_log', 'pale_oak_log']
+// No birch: 26.3 added poplar wood, and the version bridge shows poplar to this (26.1) client as
+// birch. Crafting with it then goes out of sync with the server, so the bot leaves birch alone.
+const LOGS = ['oak_log', 'spruce_log', 'jungle_log', 'acacia_log', 'dark_oak_log', 'mangrove_log', 'cherry_log', 'pale_oak_log']
 const PLANKS = LOGS.map(l => l.replace('_log', '_planks'))
 const FOOD_ANIMALS = ['cow', 'pig', 'sheep', 'chicken', 'rabbit']
 const RAW_TO_COOKED = { beef: 'cooked_beef', porkchop: 'cooked_porkchop', mutton: 'cooked_mutton', chicken: 'cooked_chicken', rabbit: 'cooked_rabbit' }
@@ -73,8 +75,26 @@ class Skills {
 
   async gotoNear (pos, range = 2, timeoutMs) { return this.goto(new goals.GoalNear(pos.x, pos.y, pos.z, range), timeoutMs) }
 
+  // Underground means no sky light at head height.
+  underground () {
+    const head = this.bot.blockAt(this.bot.entity.position.offset(0, 1.6, 0))
+    return head ? (head.skyLight || 0) === 0 : false
+  }
+
+  // Dig a staircase up until there's sky, like a player climbing out of a mine.
+  async surface () {
+    for (let i = 0; i < 12 && this.underground(); i++) {
+      this.check()
+      const p = this.bot.entity.position.floored()
+      const dir = [[1, 0], [-1, 0], [0, 1], [0, -1]][i % 4]
+      log('heading up to the surface from y', p.y)
+      await this.goto(new goals.GoalBlock(p.x + dir[0] * 6, p.y + 6, p.z + dir[1] * 6), 60000).catch(e => { if (e instanceof Interrupted) throw e; log('climb:', e.message) })
+    }
+  }
+
   // Walk somewhere new to load fresh chunks, like a player looking around.
   async explore (distance = 48) {
+    if (this.underground()) await this.surface()
     const angle = Math.random() * Math.PI * 2
     const p = this.bot.entity.position
     const x = Math.round(p.x + Math.cos(angle) * distance)
@@ -114,6 +134,8 @@ class Skills {
   async collect (names, wanted, { maxDistance = 48, exposedOnly = false, explore = true, label } = {}) {
     const what = label || names[0]
     let misses = 0
+    const surfaceThing = names.some(n => n.endsWith('_log'))
+    if (surfaceThing && this.underground() && !this.findBlocks(names, 16, 1).length) await this.surface()
     while (this.count(this.dropsFor(names)) < wanted) {
       this.check()
       const targets = this.findBlocks(names, maxDistance, 6, exposedOnly)
@@ -166,7 +188,9 @@ class Skills {
     await this.bot.lookAt(ref.position.offset(0.5, 1, 0.5), false)
     await this.bot.placeBlock(ref, new Vec3(0, 1, 0))
     await sleep(250)
-    return this.bot.blockAt(ref.position.offset(0, 1, 0))
+    const placedAt = ref.position.offset(0, 1, 0)
+    this.placed = [...(this.placed || []), placedAt]
+    return this.bot.blockAt(placedAt)
   }
 
   async nearbyOrPlaced (blockName, itemName, maxDistance = 6) {
@@ -192,8 +216,9 @@ class Skills {
     if (table) await this.gotoNear(table.position, 3)
     const before = this.count(name)
     await this.bot.craft(recipes[0], times, table)
-    await this.waitFor(() => this.count(name) > before)
+    if (!await this.waitFor(() => this.count(name) > before)) throw new Error(`crafting ${name} didn't produce anything`)
     log('crafted', name, 'x', times)
+    if (table && this.placedByMe(table)) await this.pickUp(table, 'crafting_table')
   }
 
   async ensurePlanks (n) {
@@ -206,6 +231,23 @@ class Skills {
 
   async ensureSticks (n) {
     while (this.count('stick') < n) { await this.ensurePlanks(2); await this.craft('stick', 1) }
+  }
+
+  // Players carry their crafting table and furnace, so after using one it placed, the bot
+  // breaks it and takes it along. Otherwise it gets stranded underground without one.
+  placedByMe (block) { return this.placed && this.placed.some(p => p.equals(block.position)) }
+
+  async pickUp (block, itemName) {
+    try {
+      const b = this.bot.blockAt(block.position)
+      if (!b || b.name !== itemName) return
+      await this.bot.tool.equipForBlock(b, {}).catch(() => {})
+      await this.bot.dig(b, true)
+      this.placed = this.placed.filter(p => !p.equals(block.position))
+      const drop = await this.waitFor(() => this.bot.nearestEntity(e => e.name === 'item' && e.position.distanceTo(block.position) < 3), 1500)
+      if (drop) await this.gotoNear(this.bot.nearestEntity(e => e.name === 'item' && e.position.distanceTo(block.position) < 3).position, 0, 6000).catch(() => {})
+      await this.waitFor(() => this.has(itemName), 1500)
+    } catch (e) { if (e instanceof Interrupted) throw e; log('pick up', itemName + ':', e.message) }
   }
 
   async ensureTable () {
@@ -230,7 +272,7 @@ class Skills {
   async smelt (input, output, wanted) {
     if (this.count(output) >= wanted || !this.has(input)) return
     if (!this.findBlocks(['furnace'], 6, 1).length && !this.has('furnace')) {
-      if (this.count('cobblestone') < 8) await this.collect(['stone', 'cobblestone'], 8, { label: 'stone' })
+      if (this.count('cobblestone') < 8) await this.getStone(8)
       await this.craft('furnace', 1)
     }
     const furnaceBlock = await this.nearbyOrPlaced('furnace', 'furnace')
@@ -255,11 +297,13 @@ class Skills {
     } finally {
       furnace.close()
     }
+    if (this.placedByMe(furnaceBlock)) await this.pickUp(furnaceBlock, 'furnace')
   }
 
   // ---------------------------------------------------------------- food and fighting
 
   async hunt () {
+    if (this.underground()) await this.surface()
     const target = this.bot.nearestEntity(e => FOOD_ANIMALS.includes(e.name) && e.position.distanceTo(this.bot.entity.position) < 48)
     if (!target) { await this.explore(); return }
     log('hunting', target.name)
@@ -300,9 +344,27 @@ class Skills {
 
   // ---------------------------------------------------------------- mining
 
+  // Stone you can see, or else dig down through the dirt until you hit some, like a player would.
+  async getStone (wanted) {
+    const names = ['stone', 'cobblestone', 'deepslate', 'andesite', 'diorite', 'granite']
+    for (let attempt = 0; attempt < 6 && this.count(['cobblestone', 'cobbled_deepslate']) < wanted; attempt++) {
+      this.check()
+      if (this.findBlocks(names, 24, 1, true).length) {
+        await this.collect(['stone', 'cobblestone', 'deepslate'], wanted, { maxDistance: 24, exposedOnly: true, explore: false, label: 'stone' }).catch(e => { if (e instanceof Interrupted) throw e; log('stone:', e.message) })
+        continue
+      }
+      // Staircase down a few blocks; stone gets uncovered on the way.
+      const p = this.bot.entity.position.floored()
+      const dir = [[1, 0], [-1, 0], [0, 1], [0, -1]][Math.floor(Math.random() * 4)]
+      log('digging down for stone')
+      await this.goto(new goals.GoalBlock(p.x + dir[0] * 6, p.y - 6, p.z + dir[1] * 6), 60000).catch(e => { if (e instanceof Interrupted) throw e; log('dig down:', e.message) })
+    }
+    if (this.count(['cobblestone', 'cobbled_deepslate']) < wanted) throw new Error('could not find enough stone')
+  }
+
   // Dig a staircase down to a height, then a straight tunnel, watching for ore that the
   // digging uncovers, the way a player strip mines.
-  async stripMine (oreNames, wanted, targetY = 16, tunnelLength = 24) {
+  async stripMine (oreNames, wanted, targetY = 16, tunnelLength = 12) {
     const bot = this.bot
     if (bot.entity.position.y > targetY + 2) {
       log('digging down to y', targetY)
@@ -311,23 +373,27 @@ class Skills {
       const drop = p.y - targetY
       await this.goto(new goals.GoalBlock(p.x + dir[0] * drop, targetY, p.z + dir[1] * drop), 180000)
     }
-    for (let leg = 0; leg < 4 && this.count(this.dropsFor(oreNames)) < wanted; leg++) {
+    for (let leg = 0; leg < 8 && this.count(this.dropsFor(oreNames)) < wanted; leg++) {
       const seen = this.findBlocks(oreNames, 12, 4, true)
       if (seen.length) { await this.collect(oreNames, wanted, { maxDistance: 12, exposedOnly: true, explore: false, label: oreNames[0] }).catch(e => { if (e instanceof Interrupted) throw e }); continue }
       const p = bot.entity.position.floored()
       const dir = [[1, 0], [-1, 0], [0, 1], [0, -1]][Math.floor(Math.random() * 4)]
       log('tunnelling', dir)
-      await this.goto(new goals.GoalBlock(p.x + dir[0] * tunnelLength, p.y, p.z + dir[1] * tunnelLength), 120000).catch(e => { if (e instanceof Interrupted) throw e; log('tunnel:', e.message) })
+      await this.goto(new goals.GoalBlock(p.x + dir[0] * tunnelLength, p.y, p.z + dir[1] * tunnelLength), 90000).catch(e => { if (e instanceof Interrupted) throw e; log('tunnel:', e.message) })
     }
   }
 
-  // Hold jump and swim toward the surface until there's air again.
+  // Out of air: look up, swim straight up, and dig through anything overhead.
   async swimUp () {
     const bot = this.bot
+    await bot.look(bot.entity.yaw, Math.PI / 2, true).catch(() => {})
     bot.setControlState('jump', true)
-    bot.setControlState('forward', true)
-    const until = Date.now() + 8000
-    while (Date.now() < until && bot.entity.isInWater && bot.health > 0) await sleep(200)
+    const until = Date.now() + 10000
+    while (Date.now() < until && bot.health > 0 && (bot.entity.isInWater || bot.oxygenLevel < 20)) {
+      const above = bot.blockAt(bot.entity.position.offset(0, 2, 0))
+      if (above && above.boundingBox === 'block' && above.diggable) { await bot.dig(above, true).catch(() => {}) }
+      await sleep(150)
+    }
     bot.clearControlStates()
   }
 

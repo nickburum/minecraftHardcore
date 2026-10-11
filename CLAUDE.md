@@ -10,7 +10,7 @@ All three run on the same machine as separate Java processes, each in its own `s
 |---|---|---|---|---|
 | Hardcore | `~/vanilla` (world `hardcore`) | 25565 | The real hardcore survival world | Yes, after it passes on creative |
 | Creative | `~/vanilla-creative` (world `creative`) | 25566 | Test server: try data pack changes here first | Yes, first |
-| Mod test | `~/modtest` (Fabric) | 25567 | Testing mods and data packs, recording videos | No. It gets the health inventory challenge instead |
+| Mod test | `~/modtest` (Fabric) | 25567 | Testing mods and data packs, recording videos | No. It gets the health inventory challenge, RivalBot and the bot race instead |
 
 Test every data pack change on the creative server before putting it on hardcore. Hardcore deaths are permanent, so a broken pack there can cost players their run.
 
@@ -55,6 +55,22 @@ This goes on the mod test server only. It is a challenge for recording videos, n
    - **Difficulty.** `hpinv:start` switches Peaceful to Normal by itself, so this needs no change.
    - **World.** Beating the game needs normal terrain and a fresh world. Offer a new world (for example `level-name=challenge`) so the existing test world is kept.
 4. To start a run, an operator runs `/function hpinv:start`. To end one early, run `/function hpinv:stop`.
+
+## Installing RivalBot and the bot race (mod test server)
+
+Read `rivalbot/README.md` first. Everything here is on the mod test server only.
+
+1. Stop the mod test server (ask the owner first), add these mods to `~/modtest/mods`, and start it again. They let the bot (a 26.1 client) join the 26.3 server.
+   - ViaFabric 0.4.22+186-26.x
+   - ViaVersion 5.12.2
+   - ViaBackwards 5.12.2
+   Get them from Modrinth, check their hashes, and check the log for errors on startup.
+2. Install Node.js 22+ if it's missing. Copy `rivalbot/` to `~/rivalbot`, run `npm install` there, and create `config.json` from `config.example.json` with `"port": 25567`.
+3. The bot's account: the owner provides an alt Minecraft account. Set `"auth": "microsoft"` and `"username"` to the alt's email. On first start, the bot prints a Microsoft link and code; the owner signs in on their phone. Never ask for, store or pass the password.
+4. Run the bot in its own `screen` session (for example `screen -dmS rivalbot node index.js`) so it keeps running and reconnects by itself.
+5. Copy `datapack/rival_race` into the mod test world's `datapacks/` and `/reload`. Run `/function race:admin/setup {bot:"<bot's in-game name>"}`.
+6. Resource pack: build `dist/modtest_resourcepack.zip` with `python3 tools/make_announcer.py --build` (it holds both the health inventory and race voices) and publish it as a GitHub release, as for the other packs. Use it for the mod test server's `resource-pack` instead of the health-inventory-only pack.
+7. To race: everyone joins, then an operator runs `/function race:start`.
 
 ## Server icon and description
 

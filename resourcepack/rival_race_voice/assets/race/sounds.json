@@ -1,0 +1,274 @@
+{
+  "announcer.start.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/start_1"
+      }
+    ]
+  },
+  "announcer.bot_stone.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/bot_stone_1"
+      }
+    ]
+  },
+  "announcer.bot_iron.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/bot_iron_1"
+      }
+    ]
+  },
+  "announcer.bot_armor.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/bot_armor_1"
+      }
+    ]
+  },
+  "announcer.bot_diamonds.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/bot_diamonds_1"
+      }
+    ]
+  },
+  "announcer.bot_nether.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/bot_nether_1"
+      }
+    ]
+  },
+  "announcer.bot_blaze.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/bot_blaze_1"
+      }
+    ]
+  },
+  "announcer.bot_eye.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/bot_eye_1"
+      }
+    ]
+  },
+  "announcer.bot_end.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/bot_end_1"
+      }
+    ]
+  },
+  "announcer.bot_death.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/bot_death_1"
+      }
+    ]
+  },
+  "announcer.bot_death.2": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/bot_death_2"
+      }
+    ]
+  },
+  "announcer.human_milestone.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/human_milestone_1"
+      }
+    ]
+  },
+  "announcer.human_milestone.2": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/human_milestone_2"
+      }
+    ]
+  },
+  "announcer.human_milestone.3": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/human_milestone_3"
+      }
+    ]
+  },
+  "announcer.human_death.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/human_death_1"
+      }
+    ]
+  },
+  "announcer.human_death.2": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/human_death_2"
+      }
+    ]
+  },
+  "announcer.human_death.3": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/human_death_3"
+      }
+    ]
+  },
+  "announcer.human_ahead.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/human_ahead_1"
+      }
+    ]
+  },
+  "announcer.human_ahead.2": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/human_ahead_2"
+      }
+    ]
+  },
+  "announcer.sabotage_creeper.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/sabotage_creeper_1"
+      }
+    ]
+  },
+  "announcer.sabotage_creeper.2": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/sabotage_creeper_2"
+      }
+    ]
+  },
+  "announcer.sabotage_butterfingers.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/sabotage_butterfingers_1"
+      }
+    ]
+  },
+  "announcer.sabotage_butterfingers.2": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/sabotage_butterfingers_2"
+      }
+    ]
+  },
+  "announcer.sabotage_fatigue.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/sabotage_fatigue_1"
+      }
+    ]
+  },
+  "announcer.sabotage_fatigue.2": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/sabotage_fatigue_2"
+      }
+    ]
+  },
+  "announcer.sabotage_launch.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/sabotage_launch_1"
+      }
+    ]
+  },
+  "announcer.sabotage_launch.2": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/sabotage_launch_2"
+      }
+    ]
+  },
+  "announcer.sabotage_blind.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/sabotage_blind_1"
+      }
+    ]
+  },
+  "announcer.sabotage_blind.2": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/sabotage_blind_2"
+      }
+    ]
+  },
+  "announcer.sabotage_hunger.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/sabotage_hunger_1"
+      }
+    ]
+  },
+  "announcer.sabotage_silverfish.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/sabotage_silverfish_1"
+      }
+    ]
+  },
+  "announcer.sabotage_silverfish.2": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/sabotage_silverfish_2"
+      }
+    ]
+  },
+  "announcer.win_bot.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/win_bot_1"
+      }
+    ]
+  },
+  "announcer.win_human.1": {
+    "subtitle": "subtitles.race.announcer",
+    "sounds": [
+      {
+        "name": "race:announcer/win_human_1"
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": [
+      {"text": "Bot Race", "color": "aqua", "bold": true},
+      {"text": "\nRace RivalBot to the End. The System is on its side.", "color": "gray"}
+    ],
+    "min_format": 88,
+    "max_format": 121
+  }
+}

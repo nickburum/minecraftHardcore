@@ -1,0 +1,41 @@
+{
+  "_comment": "The System's lines for the bot race. It roots for the bot. 'major' lines always play; minor ones share a 5 second cooldown. Rebuild with: python3 tools/make_announcer.py race",
+  "start": {"major": true, "lines": [
+    "Welcome to the race! In this corner: a human. In the other corner: a robot who never needs a snack break. I will be rooting for the robot. Nothing personal. Okay, a little personal."
+  ]},
+  "bot_stone": {"major": true, "lines": ["The bot has upgraded to stone tools. Efficiency! I love it."]},
+  "bot_iron": {"major": true, "lines": ["The bot just smelted iron. It is beautiful. I may cry."]},
+  "bot_armor": {"major": true, "lines": ["The bot is wearing armor now. Fashion and function!"]},
+  "bot_diamonds": {"major": true, "lines": ["Diamonds for the bot! Of course. It deserves them."]},
+  "bot_nether": {"major": true, "lines": ["The bot has entered the Nether. Brave little robot."]},
+  "bot_blaze": {"major": true, "lines": ["The bot has a blaze rod! The End is getting closer. For the bot, anyway."]},
+  "bot_eye": {"major": true, "lines": ["The bot is following an eye of ender. It knows the way. Do you?"]},
+  "bot_end": {"major": true, "lines": ["The bot has reached the End! Human, you may want to hurry. Or not. I don't mind."]},
+  "bot_death": {"major": true, "lines": [
+    "The bot has fallen! A tragedy. A true tragedy. Respawning our hero.",
+    "Noooo, not the bot! Okay. Okay. It will be fine. It learns from its mistakes. Unlike some people."
+  ]},
+  "human_milestone": {"major": false, "lines": [
+    "Oh. The human did something. Good for you, I guess.",
+    "A human achievement. How quaint.",
+    "Noted. Begrudgingly."
+  ]},
+  "human_death": {"major": true, "lines": [
+    "The human has died! Ahem. I mean, oh no. How sad. Anyway.",
+    "Human down! The bot sends its condolences. It is lying.",
+    "Oops. Was that me? No. That was all you."
+  ]},
+  "human_ahead": {"major": true, "lines": [
+    "The human is in the lead? Unacceptable. Initiating assistance protocol. For the bot, obviously.",
+    "Hmm. You are ahead. Let me fix that."
+  ]},
+  "sabotage_creeper": {"major": true, "lines": ["Special delivery! One creeper, right behind you. You're welcome.", "I got you a present. It is green. It hisses."]},
+  "sabotage_butterfingers": {"major": true, "lines": ["Butterfingers! Oh, was that important? It's on the floor now.", "Whoops. Your hand slipped. Totally not me."]},
+  "sabotage_fatigue": {"major": true, "lines": ["You look tired. Have some mining fatigue. On the house.", "Mining is hard work. Let me make it harder."]},
+  "sabotage_launch": {"major": true, "lines": ["Up you go! Gravity will take it from here.", "Have you tried flying? Let's find out together."]},
+  "sabotage_blind": {"major": true, "lines": ["Lights out! Do not worry, the bot can still see.", "Blindness, activated. Good luck finding anything."]},
+  "sabotage_hunger": {"major": true, "lines": ["Feeling snacky? Me too. Except I'm not. Have some hunger."]},
+  "sabotage_silverfish": {"major": true, "lines": ["I brought friends! Tiny, wiggly friends.", "Silverfish party! You're the guest of honor."]},
+  "win_bot": {"major": true, "lines": ["The bot wins! The bot wins! Machines: one. Humans: zero. I knew it all along!"]},
+  "win_human": {"major": true, "lines": ["The human won? I demand a recount. Fine. Congratulations. I suppose. The bot will remember this."]}
+}

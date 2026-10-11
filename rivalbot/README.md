@@ -19,6 +19,11 @@ It pairs with the **Race the Bot** data pack (`datapack/rival_race`), where the 
 - **Learns from deaths:** each death is saved in `memory.json` with what killed it. The bot changes how it plays (flees sooner, avoids lava, keeps its distance from creepers, shelters at night) and announces the lesson in chat. It also keeps success and failure counts per task and changes tactics when one keeps failing (for example, it goes straight to strip mining when looking around for iron doesn't work).
 - **Talks:** kid-friendly trash talk in chat at each milestone.
 
+**Tested so far** (on a local copy of the mod test server: Fabric 26.3 with the Via mods, on a slow test machine):
+- From an empty inventory, it reliably gets wood, a wooden pickaxe, stone tools, food, a furnace and cooked food in about 9 minutes, and the race scoreboard picks up its milestones.
+- Its hand-dug staircase reaches iron level (y=15) in about 4 minutes when the ground is dry, collecting iron on the way. Near caves and water it sometimes gives up and tries elsewhere.
+- Getting all the way to full iron gear in one run hasn't been seen yet, so expect more tuning once it runs on your real server, which is faster.
+
 **Not built yet:** the Nether (portal, fortress, blaze rods), ender pearls and eyes of ender, finding the stronghold, and the dragon fight. Until those exist, the bot keeps getting stronger in the Overworld. Each one is a big skill and will be added in stages.
 
 ## Running it on the mod test server (26.3)

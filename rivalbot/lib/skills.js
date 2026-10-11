@@ -429,17 +429,56 @@ class Skills {
     if (this.count(['cobblestone', 'cobbled_deepslate']) < wanted) throw new Error('could not find enough stone')
   }
 
+  // Dig a staircase down by hand, the way players do: clear the three blocks ahead and one down,
+  // step in, repeat. Much faster than asking the pathfinder to plan a 50-block dig. Turns away
+  // from water and lava, and grabs visible ore it uncovers on the way.
+  async digStaircase (targetY, oreNames = []) {
+    const bot = this.bot
+    let dir = this.dryStaircase(bot.entity.position.floored(), 4) || [1, 0]
+    let stuck = 0
+    while (bot.entity.position.y > targetY + 0.5 && stuck < 6) {
+      this.check()
+      const p = bot.entity.position.floored()
+      const cells = [p.offset(dir[0], 1, dir[1]), p.offset(dir[0], 0, dir[1]), p.offset(dir[0], -1, dir[1])]
+      if (cells.some(c => this.nearLiquid(c) || ['water', 'lava'].includes(bot.blockAt(c)?.name))) {
+        dir = this.dryStaircase(p, 3) || [-dir[1], dir[0]]
+        stuck++
+        continue
+      }
+      for (const c of cells) {
+        const b = bot.blockAt(c)
+        if (b && b.boundingBox === 'block' && b.diggable) {
+          await bot.tool.equipForBlock(b, {}).catch(() => {})
+          await withTimeout(bot.dig(b, true), 15000, 'digging').catch(() => {})
+        }
+      }
+      // Step down into the cleared space.
+      const target = p.offset(dir[0], -1, dir[1])
+      await bot.lookAt(target.offset(0.5, 1, 0.5), true).catch(() => {})
+      bot.setControlState('forward', true)
+      const moved = await this.waitFor(() => bot.entity.position.floored().y <= target.y && Math.abs(bot.entity.position.x - (target.x + 0.5)) < 0.8 && Math.abs(bot.entity.position.z - (target.z + 0.5)) < 0.8, 2500)
+      bot.setControlState('forward', false)
+      if (!moved) stuck++; else stuck = 0
+      // Make sure there's something to stand on.
+      const floor = bot.blockAt(bot.entity.position.floored().offset(0, -1, 0))
+      if (floor && floor.boundingBox === 'empty' && floor.name !== 'water') {
+        const fill = this.bestOf(['cobblestone', 'dirt', 'cobbled_deepslate'])
+        if (fill) { await bot.equip(this.item(fill), 'hand').catch(() => {}); await bot.placeBlock(bot.blockAt(bot.entity.position.floored().offset(0, -2, 0)), new Vec3(0, 1, 0)).catch(() => {}) }
+      }
+      if (oreNames.length && this.findBlocks(oreNames, 5, 1, true).length) {
+        await this.collect(oreNames, this.count(this.dropsFor(oreNames)) + 1, { maxDistance: 5, exposedOnly: true, explore: false, label: oreNames[0] }).catch(e => { if (e instanceof Interrupted) throw e })
+      }
+    }
+    if (bot.entity.position.y > targetY + 0.5) throw new Error('could not dig down here')
+  }
+
   // Dig a staircase down to a height, then a straight tunnel, watching for ore that the
   // digging uncovers, the way a player strip mines.
   async stripMine (oreNames, wanted, targetY = 16, tunnelLength = 12) {
     const bot = this.bot
     if (bot.entity.position.y > targetY + 2) {
       log('digging down to y', targetY)
-      const p = bot.entity.position.floored()
-      const dir = this.dryStaircase(p, 8)
-      if (!dir) { await this.explore(40); throw new Error('water all around, try again') }
-      const drop = p.y - targetY
-      await this.goto(new goals.GoalBlock(p.x + dir[0] * drop, targetY, p.z + dir[1] * drop), 420000).catch(e => { if (e instanceof Interrupted) throw e; log('dig down:', e.message) })
+      await this.digStaircase(targetY, oreNames)
     }
     for (let leg = 0; leg < 8 && this.count(this.dropsFor(oreNames)) < wanted; leg++) {
       const seen = this.findBlocks(oreNames, 12, 4, true)

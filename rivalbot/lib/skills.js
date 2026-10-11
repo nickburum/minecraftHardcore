@@ -104,7 +104,14 @@ class Skills {
 
   // Walk somewhere new to load fresh chunks, like a player looking around.
   async explore (distance = 48) {
-    if (this.underground()) await this.surface()
+    // Underground, exploring means tunnelling sideways; only surface jobs climb out (see collect/hunt).
+    if (this.underground()) {
+      const p = this.bot.entity.position.floored()
+      const dir = this.dryStaircase(p.offset(0, 1, 0), 0) || [1, 0]
+      log('tunnelling to explore')
+      try { await this.goto(new goals.GoalBlock(p.x + dir[0] * 16, p.y, p.z + dir[1] * 16), 90000) } catch (e) { if (e instanceof Interrupted) throw e }
+      return
+    }
     const angle = Math.random() * Math.PI * 2
     const p = this.bot.entity.position
     const x = Math.round(p.x + Math.cos(angle) * distance)
@@ -407,7 +414,7 @@ class Skills {
       const dir = this.dryStaircase(p, 8)
       if (!dir) { await this.explore(40); throw new Error('water all around, try again') }
       const drop = p.y - targetY
-      await this.goto(new goals.GoalBlock(p.x + dir[0] * drop, targetY, p.z + dir[1] * drop), 180000)
+      await this.goto(new goals.GoalBlock(p.x + dir[0] * drop, targetY, p.z + dir[1] * drop), 420000).catch(e => { if (e instanceof Interrupted) throw e; log('dig down:', e.message) })
     }
     for (let leg = 0; leg < 8 && this.count(this.dropsFor(oreNames)) < wanted; leg++) {
       const seen = this.findBlocks(oreNames, 12, 4, true)

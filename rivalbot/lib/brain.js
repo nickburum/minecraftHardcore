@@ -29,7 +29,7 @@ class Brain {
       { name: 'stone tools', done: () => (s.has('stone_pickaxe') || s.has('iron_pickaxe')) && (s.has('stone_sword') || s.has('iron_sword')) && s.has('stone_axe'), run: async () => { await s.craftTool('stone_pickaxe'); await s.craftTool('stone_sword'); await s.craftTool('stone_axe') }, milestone: 'stone' },
       { name: 'food', done: () => s.count(FOODS) >= 6, run: () => s.hunt() },
       { name: 'furnace', done: () => s.has('furnace') || s.findBlocks(['furnace'], 24, 1).length > 0 || this.memory.data.skills.furnace?.ok > 0 && !s.has('raw_iron') && !Object.keys(RAW_TO_COOKED).some(r => s.has(r)), run: async () => { if (s.count('cobblestone') < 8) await s.getStone(8); await s.craft('furnace', 1) } },
-      { name: 'cook food', done: () => !Object.keys(RAW_TO_COOKED).some(r => s.has(r)), run: async () => { await s.nearbyOrPlaced('furnace', 'furnace'); await s.cookFood() } },
+      { name: 'cook food', done: () => !Object.keys(RAW_TO_COOKED).some(r => s.has(r)) || s.count(FOODS.slice(0, 7)) >= 4 || (this.memory.data.skills['cook food']?.fail || 0) > 2, run: async () => { await s.nearbyOrPlaced('furnace', 'furnace'); await s.cookFood() } },
       {
         name: 'iron',
         done: () => s.count(['raw_iron', 'iron_ingot']) >= 16 || s.has('iron_chestplate'),

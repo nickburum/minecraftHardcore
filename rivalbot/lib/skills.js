@@ -135,6 +135,22 @@ class Skills {
     return false
   }
 
+  // A direction to dig a staircase down `depth` blocks without touching water, or null.
+  dryStaircase (p, depth) {
+    const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]].sort(() => Math.random() - 0.5)
+    for (const [dx, dz] of dirs) {
+      let dry = true
+      for (let i = 1; i <= depth && dry; i++) {
+        for (const [ox, oy, oz] of [[0, 0, 0], [0, 1, 0], [0, 2, 0], [dz, 0, dx], [-dz, 0, -dx], [dx, 0, dz], [0, -1, 0]]) {
+          const b = this.bot.blockAt(p.offset(dx * i + ox, -i + oy, dz * i + oz))
+          if (b && (b.name === 'water' || b.name === 'lava')) { dry = false; break }
+        }
+      }
+      if (dry) return [dx, dz]
+    }
+    return null
+  }
+
   waterNearby (radius) {
     return this.bot.findBlocks({ matching: this.mcData.blocksByName.water.id, maxDistance: radius, count: 1 }).length > 0
   }
@@ -296,8 +312,8 @@ class Skills {
     const furnace = await this.bot.openFurnace(furnaceBlock)
     try {
       const n = Math.min(this.count(input), wanted - this.count(output))
-      const fuel = this.bestOf(FUEL)
-      if (!fuel) throw new Error('no fuel')
+      let fuel = this.bestOf(FUEL)
+      if (!fuel) { furnace.close(); await this.collect(LOGS, Math.ceil(n / 1.5) + 1, { label: 'logs for fuel' }); return this.smelt(input, output, wanted) }
       const perFuel = fuel === 'coal' || fuel === 'charcoal' ? 8 : (fuel.endsWith('_log') ? 1.5 : 1.5)
       if (!furnace.fuelItem()) await furnace.putFuel(this.mcData.itemsByName[fuel].id, null, Math.min(this.count(fuel), Math.ceil(n / perFuel)))
       await furnace.putInput(this.mcData.itemsByName[input].id, null, n)
@@ -370,10 +386,11 @@ class Skills {
         await this.collect(['stone', 'cobblestone', 'deepslate'], wanted, { maxDistance: 24, exposedOnly: true, explore: false, label: 'stone' }).catch(e => { if (e instanceof Interrupted) throw e; log('stone:', e.message) })
         continue
       }
-      // Staircase down a few blocks; stone gets uncovered on the way. Never next to water.
-      if (this.waterNearby(8)) { log('water nearby, moving away before digging'); await this.explore(40); continue }
+      // Staircase down a few blocks; stone gets uncovered on the way. Pick a direction with no
+      // water along the way, so it doesn't dig into a lake.
       const p = this.bot.entity.position.floored()
-      const dir = [[1, 0], [-1, 0], [0, 1], [0, -1]][Math.floor(Math.random() * 4)]
+      const dir = this.dryStaircase(p, 6)
+      if (!dir) { log('water all around, moving before digging'); await this.explore(40); continue }
       log('digging down for stone')
       await this.goto(new goals.GoalBlock(p.x + dir[0] * 6, p.y - 6, p.z + dir[1] * 6), 60000).catch(e => { if (e instanceof Interrupted) throw e; log('dig down:', e.message) })
     }
@@ -387,7 +404,8 @@ class Skills {
     if (bot.entity.position.y > targetY + 2) {
       log('digging down to y', targetY)
       const p = bot.entity.position.floored()
-      const dir = [[1, 0], [-1, 0], [0, 1], [0, -1]][Math.floor(Math.random() * 4)]
+      const dir = this.dryStaircase(p, 8)
+      if (!dir) { await this.explore(40); throw new Error('water all around, try again') }
       const drop = p.y - targetY
       await this.goto(new goals.GoalBlock(p.x + dir[0] * drop, targetY, p.z + dir[1] * drop), 180000)
     }

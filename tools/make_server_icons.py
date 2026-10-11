@@ -6,7 +6,7 @@ Uses textures and the font from a Minecraft client jar:
     python3 tools/make_server_icons.py path/to/client.jar
 
 Writes server/<name>/server-icon.png, preview.png and motd.properties for the
-hardcore and creative servers. The MOTD text is read from server/<name>/motd.txt.
+hardcore, creative and mod test servers. The MOTD text is read from server/<name>/motd.txt.
 """
 import io
 import json
@@ -18,7 +18,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
-SERVERS = {"hardcore": "Hardcore", "creative": "Creative"}
+SERVERS = {"hardcore": "Hardcore Server", "creative": "Creative Server", "modtest": "Mod Test Server"}
 
 COLORS = {  # Minecraft § color codes
     "0": (0, 0, 0), "1": (0, 0, 170), "2": (0, 170, 0), "3": (0, 170, 170),
@@ -174,6 +174,45 @@ def creative_icon(jar):
     return icon
 
 
+def frame(tex):
+    """First frame of an animated (vertical strip) texture."""
+    return tex.crop((0, 0, tex.width, tex.width))
+
+
+def modtest_icon(jar, font):
+    size = 64
+    # Dark lab background with a purple glow.
+    icon = radial(size, (70, 30, 110), (12, 8, 24), center=(32, 34), radius=40)
+    for x in range(0, size, 8):  # faint grid
+        for y in range(size):
+            if (x + y) % 2 == 0:
+                px = icon.getpixel((x, y))
+                icon.putpixel((x, y), tuple(min(255, v + 14) for v in px[:3]) + (255,))
+    for y in range(0, size, 8):
+        for x in range(size):
+            if (x + y) % 2 == 0:
+                px = icon.getpixel((x, y))
+                icon.putpixel((x, y), tuple(min(255, v + 14) for v in px[:3]) + (255,))
+
+    front = frame(jar.image("block/command_block_front.png"))
+    side = frame(jar.image("block/command_block_side.png"))
+    top = side.rotate(90)
+    cube = iso_cube(top, shade(front, 0.85), shade(side, 0.65), 40)
+    shadow = Image.new("RGBA", (size, size))
+    ImageDraw.Draw(shadow).ellipse((14, 48, 50, 58), fill=(0, 0, 0, 140))
+    icon.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(2)))
+    icon.alpha_composite(cube, ((size - cube.width) // 2, 10))
+
+    # REC badge: recording for videos.
+    badge = Image.new("RGBA", (27, 11), (0, 0, 0, 0))
+    d = ImageDraw.Draw(badge)
+    d.rounded_rectangle((0, 0, 26, 10), radius=3, fill=(20, 20, 20, 230), outline=(90, 90, 90, 255))
+    d.ellipse((3, 3, 7, 7), fill=(255, 40, 40, 255))
+    font.draw(badge, 10, 2, "§fREC", 1)
+    icon.alpha_composite(badge, (35, 2))
+    return icon
+
+
 # ---------------------------------------------------------------- preview
 
 class Font:
@@ -275,13 +314,14 @@ def main():
     font = Font(jar)
     for name, title in SERVERS.items():
         out = ROOT / "server" / name
-        icon = hardcore_icon(jar) if name == "hardcore" else creative_icon(jar)
+        icon = {"hardcore": lambda: hardcore_icon(jar), "creative": lambda: creative_icon(jar),
+                "modtest": lambda: modtest_icon(jar, font)}[name]()
         icon.save(out / "server-icon.png")
         lines = motd_lines(name)
         for line in lines:
             if font.width(line) > 271:
                 print(f"warning: {name} MOTD line is {font.width(line)}px wide, over the 271px that fits: {line}")
-        preview(jar, font, icon, f"{title} Server", lines, "3/20").save(out / "preview.png")
+        preview(jar, font, icon, title, lines, "3/20").save(out / "preview.png")
         (out / "motd.properties").write_text(
             "# Replace the motd= line in server.properties with this one.\n" + properties_line(lines) + "\n")
         print(f"wrote server/{name}/server-icon.png, preview.png and motd.properties")

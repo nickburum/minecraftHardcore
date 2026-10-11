@@ -1,0 +1,4 @@
+# Server list description (MOTD). Two lines, using § color codes.
+# tools/make_server_icons.py turns this into the preview; see README for server.properties.
+§d§l⚡ MOD LAB ⚡ §8» §bMods & data pack testing
+§c● REC §7Filming in progress. Things may break!

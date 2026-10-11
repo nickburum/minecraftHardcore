@@ -1,6 +1,18 @@
 # Notes for Claude Code
 
-This repo holds add-ons for a Minecraft **Java Edition** hardcore server. The main piece is the Elixir of Life data pack (see README.md for what it does). It also has the server-list icon and description for both the hardcore and the creative server, in `server/`.
+This repo holds add-ons for a Minecraft **Java Edition** hardcore server. The main piece is the Elixir of Life data pack (see README.md for what it does). It also has the server-list icon and description for all three servers, in `server/`.
+
+## The servers
+
+All three run on the same machine as separate Java processes, each in its own `screen` session.
+
+| Server | Folder on the host | Port | What it's for | Gets the data pack |
+|---|---|---|---|---|
+| Hardcore | `~/vanilla` (world `hardcore`) | 25565 | The real hardcore survival world | Yes, after it passes on creative |
+| Creative | `~/vanilla-creative` (world `creative`) | 25566 | Test server: try data pack changes here first | Yes, first |
+| Mod test | `~/modtest` (Fabric) | 25567 | Testing mods and data packs, recording videos | Only if asked |
+
+Test every data pack change on the creative server before putting it on hardcore. Hardcore deaths are permanent, so a broken pack there can cost players their run.
 
 If you are running on the game server and were asked to install it, follow the steps below. Ask the owner before restarting the server or changing `server.properties`, because players may be online.
 
@@ -20,7 +32,7 @@ If you are running on the game server and were asked to install it, follow the s
      `data modify storage elixir:data world_spawn set value {dimension:"minecraft:overworld",x:X,y:Y,z:Z}`
 6. **Resource pack (announcer voice).** This step is optional, and everything else works without it.
    - Run `python3 tools/make_voices.py --build` to build `dist/elixir_of_life_resourcepack.zip`. The command prints the SHA-1.
-   - The zip needs a **public direct-download URL**. This GitHub repo is private, so raw links won't work. Ask the owner where to host it.
+   - The zip needs a **public direct-download URL**. It is hosted as a GitHub release on this repo (tags `resourcepack-v1`, `resourcepack-v2`, …). Publish each rebuilt zip as a new release, because the SHA-1 changes, and confirm the download's SHA-1 matches before you set it.
    - Then set these in `server.properties` and restart:
      - `resource-pack=<url>`
      - `resource-pack-sha1=<sha1>`
@@ -31,7 +43,7 @@ If you are running on the game server and were asked to install it, follow the s
 
 ## Server icon and description
 
-Do this for each server you are asked to set up: the hardcore server uses `server/hardcore/` and the creative server uses `server/creative/`. Only the hardcore server gets the data pack.
+Do this for each server you are asked to set up: hardcore uses `server/hardcore/`, creative uses `server/creative/`, and mod test uses `server/modtest/`.
 
 1. Copy `server/<name>/server-icon.png` into the server directory, next to `server.properties`, keeping that exact file name. Back up any existing `server-icon.png` first.
 2. In `server.properties`, replace the `motd=` line with the `motd=` line from `server/<name>/motd.properties`. Copy it exactly, including the `\u00A7` escapes.

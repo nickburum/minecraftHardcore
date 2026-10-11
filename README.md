@@ -1,6 +1,6 @@
 # minecraftHardcore
 
-Add-ons for the hardcore server, plus server-list branding for the hardcore and creative servers.
+Add-ons for the hardcore server, plus server-list branding for all three servers: hardcore, creative (test) and mod test.
 
 ## Server list icons and descriptions
 
@@ -8,6 +8,7 @@ Add-ons for the hardcore server, plus server-list branding for the hardcore and 
 |---|---|
 | Hardcore | ![Hardcore server in the server list](server/hardcore/preview.png) |
 | Creative | ![Creative server in the server list](server/creative/preview.png) |
+| Mod test | ![Mod test server in the server list](server/modtest/preview.png) |
 
 Each folder under `server/` holds:
 - `server-icon.png`: the 64×64 icon. Copy it into the server's main folder (next to `server.properties`) with exactly that name.
@@ -57,7 +58,7 @@ Java Edition **1.21.9 to 26.3**. Bedrock is not supported.
      resource-pack-sha1=<sha1 printed by tools/make_voices.py>
      require-resource-pack=false
      ```
-     This repo is private, so GitHub raw links won't work. Use a public file host or your server host's file hosting. Then restart the server.
+     The easiest host is a GitHub release on this repo (it's public): attach the zip to a release and use the asset's download link. Every rebuild changes the SHA-1, so publish each new zip as a new release and update both lines. Then restart the server.
    - **Manual.** Each player puts the zip in `.minecraft/resourcepacks/` and enables it.
 
 Build the zips with `python3 tools/make_voices.py --build`. The command also prints the SHA-1.
@@ -105,7 +106,7 @@ datapack/elixir_of_life/       the data pack
 resourcepack/elixir_of_life_sounds/   announcer voice lines
 tools/make_voices.py           makes the voice lines and builds dist/*.zip
 tools/make_server_icons.py     makes the server icons, MOTD lines and previews
-server/hardcore, server/creative   server-list icon and description for each server
+server/hardcore, server/creative, server/modtest   server-list icon and description for each server
 tests/                         end-to-end test with bot players
 ```
 

@@ -10,7 +10,7 @@ All three run on the same machine as separate Java processes, each in its own `s
 |---|---|---|---|---|
 | Hardcore | `~/vanilla` (world `hardcore`) | 25565 | The real hardcore survival world | Yes, after it passes on creative |
 | Creative | `~/vanilla-creative` (world `creative`) | 25566 | Test server: try data pack changes here first | Yes, first |
-| Mod test | `~/modtest` (Fabric) | 25567 | Testing mods and data packs, recording videos | Only if asked |
+| Mod test | `~/modtest` (Fabric) | 25567 | Testing mods and data packs, recording videos | No. It gets the health inventory challenge instead |
 
 Test every data pack change on the creative server before putting it on hardcore. Hardcore deaths are permanent, so a broken pack there can cost players their run.
 
@@ -40,6 +40,21 @@ If you are running on the game server and were asked to install it, follow the s
 7. **Smoke test** (console or RCON):
    - `function elixir:admin/list` should print empty Fallen and Pending lists.
    - `give <op> minecraft:golden_apple` and `give <op> minecraft:potion[potion_contents={potion:"minecraft:weakness"}]`. Then have the operator craft the elixir and right-click it. It should say "No fallen champions await revival."
+
+## Installing the health inventory challenge (mod test server)
+
+This goes on the mod test server only. It is a challenge for recording videos, not something for the hardcore or creative worlds.
+
+1. Copy `datapack/health_inventory` to `~/modtest/<world>/datapacks/health_inventory` (the world folder is `level-name` in `~/modtest/server.properties`). Run `/reload`, then check that `/datapack list` shows `file/health_inventory` and the log has no `ERROR` lines mentioning `hpinv`.
+2. Resource pack (the announcer voice):
+   - Run `python3 tools/make_announcer.py --build`. It builds `dist/health_inventory_resourcepack.zip` and prints the SHA-1.
+   - Publish the zip as a GitHub release on this repo, tagged `health-inventory-v1` (then `-v2`, … for later rebuilds), and check that the downloaded file's SHA-1 matches.
+   - In `~/modtest/server.properties`, set `resource-pack=<release asset URL>`, `resource-pack-sha1=<sha1>` and `require-resource-pack=false`. This needs a restart.
+3. Ask the owner before you change these, because the mod test server is currently set up for creative testing:
+   - **Game mode.** `gamemode=creative` with `force-gamemode=true` puts players back in Creative every time they join. For a recording session, use `gamemode=survival` and `force-gamemode=false`.
+   - **Difficulty.** `hpinv:start` switches Peaceful to Normal by itself, so this needs no change.
+   - **World.** Beating the game needs normal terrain and a fresh world. Offer a new world (for example `level-name=challenge`) so the existing test world is kept.
+4. To start a run, an operator runs `/function hpinv:start`. To end one early, run `/function hpinv:stop`.
 
 ## Server icon and description
 

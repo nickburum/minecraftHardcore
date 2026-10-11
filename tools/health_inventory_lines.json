@@ -1,0 +1,57 @@
+{
+  "_comment": "Announcer lines for the 'my health is my inventory' challenge. 'major' lines always play; minor ones share a 5 second cooldown so the System doesn't talk over itself. Rebuild with: python3 tools/make_announcer.py",
+  "start": {"major": true, "lines": [
+    "Attention, player! New rule just dropped. Your hearts are now your inventory. Ten hearts, ten slots. Lose a heart, lose a slot. Lose them all, and, well. Let's not spoil the ending. Good luck. You will need it."
+  ]},
+  "slot_lost": {"major": false, "lines": [
+    "Ouch. That heart was holding a slot. Not anymore.",
+    "Slot confiscated. Please keep your hands inside the inventory at all times.",
+    "Another heart, another slot. At this rate you'll be carrying everything in your pockets. Oh, wait. You don't have pockets."
+  ]},
+  "item_dropped": {"major": false, "lines": [
+    "And there goes your stuff. Onto the floor. Where it lives now.",
+    "Butterfingers! Something just fell out of your inventory.",
+    "Item dropped. The ground thanks you for your generous donation."
+  ]},
+  "slot_regained": {"major": false, "lines": [
+    "Heart restored! One slot returned. Try not to lose it immediately.",
+    "Look at you, healing! Your inventory grows. I'm almost proud.",
+    "A slot has been returned. Please treat it better than the last one."
+  ]},
+  "one_heart": {"major": true, "lines": [
+    "Warning! One heart. One slot. One very nervous player.",
+    "You are down to a single slot. Choose wisely. Maybe not the dirt."
+  ]},
+  "fall": {"major": false, "lines": [
+    "Gravity: one. You: zero.",
+    "Fun fact! The ground does not move out of the way.",
+    "That was a long way down. Your inventory felt every block of it."
+  ]},
+  "fire": {"major": false, "lines": [
+    "You are on fire. This is not a suggestion. It is a status update.",
+    "Hot tip: lava is not a hot tub.",
+    "Things are heating up! Mostly you."
+  ]},
+  "explosion": {"major": false, "lines": [
+    "That creeper just wanted a hug. A very, very loud hug.",
+    "Kaboom! Your inventory has been rearranged. Mostly onto the floor.",
+    "Explosion detected. Have you tried not standing next to it?"
+  ]},
+  "diamond": {"major": true, "lines": [
+    "Diamonds! Shiny! Now, whatever you do, do not get hit."
+  ]},
+  "nether": {"major": true, "lines": [
+    "Welcome to the Nether! Everything here wants to set you on fire. Please enjoy your stay."
+  ]},
+  "end": {"major": true, "lines": [
+    "Welcome to the End! One giant dragon versus one tiny inventory. I like these odds. For the dragon."
+  ]},
+  "death": {"major": true, "lines": [
+    "And the player has fallen! Inventory size: zero. Pride: also zero. Let's go again!",
+    "Oh no. Oh no, no, no. Well. That happened. Respawning one very embarrassed player.",
+    "System message: you have died. Please collect your belongings. All of them. From the floor."
+  ]},
+  "dragon": {"major": true, "lines": [
+    "Unbelievable! The dragon is down! Beaten with an inventory the size of a lunchbox. System message: you are a legend!"
+  ]}
+}

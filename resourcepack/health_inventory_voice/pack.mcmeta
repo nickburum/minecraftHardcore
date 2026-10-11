@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": [
+      {"text": "Minecraft, but...", "color": "gold", "bold": true},
+      {"text": "\nThe System announcer", "color": "aqua"}
+    ],
+    "min_format": 69,
+    "max_format": 97
+  }
+}

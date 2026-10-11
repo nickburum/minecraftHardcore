@@ -19,6 +19,24 @@ Restart the server afterwards; both are only read at startup.
 
 To change the text, edit `motd.txt` and run `python3 tools/make_server_icons.py <path to a Minecraft client .jar>`. That rebuilds the icons, previews and `motd.properties`, and warns if a line is too long to fit.
 
+## Challenge: Minecraft, but my health is my inventory
+
+A data pack for recording challenge videos, made for the mod test server.
+
+- **The rule: 10 hearts = 10 slots.** Your hotbar (9 slots) plus your offhand are your whole inventory, and the 27 backpack slots are locked. Each heart you lose locks a slot, starting with the offhand and then from the right end of the hotbar. Whatever was in that slot falls on the ground. Heal and the slots unlock again. At one heart you only have your first hotbar slot.
+- **Goal:** beat the game by killing the Ender Dragon. You get a win screen, fireworks and stats (time, deaths, hearts lost, items dropped).
+- **The System:** a sarcastic, kid-friendly AI announcer, written in the spirit of Dungeon Crawler Carl. It comments when you start, lose a slot, drop items, heal, fall, burn, get blown up, find diamonds, enter the Nether and the End, die, and win. Every line also shows in chat as `[SYSTEM] …`. Small comments share a 5 second cooldown so it doesn't talk over itself; big moments always play.
+- **On screen:** an intro ("Minecraft, but… My health is my inventory"), a 3-2-1 countdown, and a bar above the hotbar showing hearts = slots and a timer.
+
+| Command | What it does |
+|---|---|
+| `/function hpinv:start` | Starts the challenge for everyone online. It clears inventories, heals everyone, switches them to Survival, and changes Peaceful to Normal |
+| `/function hpinv:stop` | Ends it and unlocks every slot |
+| `/function hpinv:admin/stats` | Shows time, deaths, hearts lost and items dropped |
+| `/function hpinv:admin/hud_toggle` | Hides or shows the hearts and timer bar, for clean footage |
+
+The announcer voice needs `resourcepack/health_inventory_voice` (build it with `python3 tools/make_announcer.py --build`). To change what the System says, edit `tools/health_inventory_lines.json` and run `python3 tools/make_announcer.py`. That regenerates the voice clips and the `voice/*.mcfunction` files together. Tested end to end with a bot player on 1.21.11 (25 checks, `tests/challenge_e2e.js`), and every command was checked on 26.3.
+
 ## Elixir of Life
 
 A data pack that lets players bring fallen champions back in a hardcore world, plus server-wide death and resurrection announcements.

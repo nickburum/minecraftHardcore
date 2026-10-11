@@ -1,0 +1,226 @@
+{
+  "announcer.start.1": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/start_1"
+      }
+    ]
+  },
+  "announcer.slot_lost.1": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/slot_lost_1"
+      }
+    ]
+  },
+  "announcer.slot_lost.2": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/slot_lost_2"
+      }
+    ]
+  },
+  "announcer.slot_lost.3": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/slot_lost_3"
+      }
+    ]
+  },
+  "announcer.item_dropped.1": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/item_dropped_1"
+      }
+    ]
+  },
+  "announcer.item_dropped.2": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/item_dropped_2"
+      }
+    ]
+  },
+  "announcer.item_dropped.3": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/item_dropped_3"
+      }
+    ]
+  },
+  "announcer.slot_regained.1": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/slot_regained_1"
+      }
+    ]
+  },
+  "announcer.slot_regained.2": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/slot_regained_2"
+      }
+    ]
+  },
+  "announcer.slot_regained.3": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/slot_regained_3"
+      }
+    ]
+  },
+  "announcer.one_heart.1": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/one_heart_1"
+      }
+    ]
+  },
+  "announcer.one_heart.2": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/one_heart_2"
+      }
+    ]
+  },
+  "announcer.fall.1": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/fall_1"
+      }
+    ]
+  },
+  "announcer.fall.2": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/fall_2"
+      }
+    ]
+  },
+  "announcer.fall.3": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/fall_3"
+      }
+    ]
+  },
+  "announcer.fire.1": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/fire_1"
+      }
+    ]
+  },
+  "announcer.fire.2": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/fire_2"
+      }
+    ]
+  },
+  "announcer.fire.3": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/fire_3"
+      }
+    ]
+  },
+  "announcer.explosion.1": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/explosion_1"
+      }
+    ]
+  },
+  "announcer.explosion.2": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/explosion_2"
+      }
+    ]
+  },
+  "announcer.explosion.3": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/explosion_3"
+      }
+    ]
+  },
+  "announcer.diamond.1": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/diamond_1"
+      }
+    ]
+  },
+  "announcer.nether.1": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/nether_1"
+      }
+    ]
+  },
+  "announcer.end.1": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/end_1"
+      }
+    ]
+  },
+  "announcer.death.1": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/death_1"
+      }
+    ]
+  },
+  "announcer.death.2": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/death_2"
+      }
+    ]
+  },
+  "announcer.death.3": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/death_3"
+      }
+    ]
+  },
+  "announcer.dragon.1": {
+    "subtitle": "subtitles.hpinv.announcer",
+    "sounds": [
+      {
+        "name": "hpinv:announcer/dragon_1"
+      }
+    ]
+  }
+}

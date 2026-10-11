@@ -119,7 +119,7 @@ class Brain {
     if (bot.oxygenLevel !== undefined && bot.oxygenLevel < 14 && bot.entity.isInWater) action = async () => { log('out of air, swimming up'); await this.skills.swimUp() }
     else if (creeper) action = async () => { log('creeper! backing off'); this.say.event('creeper'); await this.skills.backOff(creeper.position, 8) }
     else if (close && bot.health < st.retreatHealth) action = async () => { log('low health, retreating'); this.say.event('retreat'); await this.skills.backOff(close.position, 12); await this.eatIfPossible() }
-    else if (close && st.fightBack) action = async () => { log('fighting', close.name); await this.skills.fight(close, 15000) }
+    else if (close && st.fightBack && !bot.entity.isInWater) action = async () => { log('fighting', close.name); await this.skills.fight(close, 15000) }
     else if (surfaceNight) action = async () => { log('night: digging in'); this.say.event('night'); await this.skills.digIn(); this.sheltered = true; while (this.isNight()) await sleep(2000); this.sheltered = false; this.say.event('morning') }
     if (!action) return
 

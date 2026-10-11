@@ -125,6 +125,10 @@ class Skills {
     return false
   }
 
+  waterNearby (radius) {
+    return this.bot.findBlocks({ matching: this.mcData.blocksByName.water.id, maxDistance: radius, count: 1 }).length > 0
+  }
+
   findBlocks (names, maxDistance = 48, count = 16, requireExposed = false) {
     const ids = names.map(n => this.mcData.blocksByName[n]?.id).filter(id => id !== undefined)
     const found = this.bot.findBlocks({ matching: ids, maxDistance, count: count * 4 })
@@ -330,7 +334,8 @@ class Skills {
     await this.equipWeapon()
     this.bot.pvp.attack(entity)
     const until = Date.now() + timeoutMs
-    while (entity.isValid && Date.now() < until && this.bot.health > 0) await sleep(250)
+    // Air comes first: stop fighting when drowning.
+    while (entity.isValid && Date.now() < until && this.bot.health > 0 && !(this.bot.entity.isInWater && this.bot.oxygenLevel < 14)) await sleep(250)
     this.bot.pvp.stop()
   }
 
@@ -353,7 +358,8 @@ class Skills {
         await this.collect(['stone', 'cobblestone', 'deepslate'], wanted, { maxDistance: 24, exposedOnly: true, explore: false, label: 'stone' }).catch(e => { if (e instanceof Interrupted) throw e; log('stone:', e.message) })
         continue
       }
-      // Staircase down a few blocks; stone gets uncovered on the way.
+      // Staircase down a few blocks; stone gets uncovered on the way. Never next to water.
+      if (this.waterNearby(8)) { log('water nearby, moving away before digging'); await this.explore(40); continue }
       const p = this.bot.entity.position.floored()
       const dir = [[1, 0], [-1, 0], [0, 1], [0, -1]][Math.floor(Math.random() * 4)]
       log('digging down for stone')

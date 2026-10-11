@@ -124,8 +124,9 @@ class Brain {
     if (!action) return
 
     this.reflexBusy = true
+    this.skills.paused = true
     this.interrupt()
-    try { await action() } finally { this.skills.interrupted = false; this.reflexBusy = false }
+    try { await action() } finally { this.skills.interrupted = false; this.skills.paused = false; this.reflexBusy = false }
   }
 
   async eatIfPossible () {

@@ -63,22 +63,32 @@ class Skills {
 
   // ---------------------------------------------------------------- movement
 
-  async goto (goal, timeoutMs = 60000) {
-    this.check()
+  // Reflexes (swimming for air, backing off) own the movement while they run; the plan waits.
+  async goto (goal, timeoutMs = 60000, { reflex = false } = {}) {
+    if (!reflex) { while (this.paused) await sleep(100) }
+    if (!reflex) this.check()
     try {
       await withTimeout(this.bot.pathfinder.goto(goal), timeoutMs, 'walking')
     } finally {
       this.bot.pathfinder.setGoal(null)
     }
-    this.check()
+    if (!reflex) this.check()
   }
 
   async gotoNear (pos, range = 2, timeoutMs) { return this.goto(new goals.GoalNear(pos.x, pos.y, pos.z, range), timeoutMs) }
 
-  // Underground means no sky light at head height.
+  // Underground means solid blocks overhead. (Sky light would be simpler, but it doesn't come
+  // through the 26.3 -> 26.1 version bridge reliably.)
   underground () {
-    const head = this.bot.blockAt(this.bot.entity.position.offset(0, 1.6, 0))
-    return head ? (head.skyLight || 0) === 0 : false
+    const p = this.bot.entity.position.floored()
+    let solid = 0
+    for (let dy = 2; dy < 40; dy++) {
+      const b = this.bot.blockAt(p.offset(0, dy, 0))
+      if (!b) break
+      if (b.boundingBox === 'block' && !b.name.includes('leaves') && !b.name.endsWith('_log')) solid++
+      if (solid >= 3) return true
+    }
+    return false
   }
 
   // Dig a staircase up until there's sky, like a player climbing out of a mine.
@@ -149,6 +159,8 @@ class Skills {
         continue
       }
       const blocks = targets.map(p => this.bot.blockAt(p)).filter(Boolean)
+      while (this.paused) await sleep(100)
+      this.check()
       try {
         await withTimeout(this.bot.collectBlock.collect(blocks.slice(0, 1), { ignoreNoPath: true }), 45000, `collecting ${what}`)
       } catch (e) {
@@ -344,7 +356,7 @@ class Skills {
     const p = this.bot.entity.position
     const away = p.minus(from).normalize().scaled(distance).plus(p)
     this.bot.setControlState('sprint', true)
-    try { await this.goto(new goals.GoalXZ(Math.round(away.x), Math.round(away.z)), 5000) } catch (e) {} finally { this.bot.setControlState('sprint', false) }
+    try { await this.goto(new goals.GoalXZ(Math.round(away.x), Math.round(away.z)), 5000, { reflex: true }) } catch (e) {} finally { this.bot.setControlState('sprint', false) }
   }
 
   // ---------------------------------------------------------------- mining

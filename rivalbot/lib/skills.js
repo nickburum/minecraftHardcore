@@ -91,14 +91,39 @@ class Skills {
     return false
   }
 
-  // Dig a staircase up until there's sky, like a player climbing out of a mine.
+  // Climb out the way players do: dig the block over your head, jump, and put a block under your
+  // feet. Falls back to letting the pathfinder dig a staircase when there's nothing to place.
   async surface () {
-    for (let i = 0; i < 12 && this.underground(); i++) {
+    const bot = this.bot
+    const scaffold = () => this.bestOf(['dirt', 'cobblestone', 'cobbled_deepslate', 'netherrack', 'andesite', 'diorite', 'granite', 'tuff'])
+    log('climbing to the surface from y', Math.floor(bot.entity.position.y))
+    for (let i = 0; i < 120 && this.underground(); i++) {
       this.check()
-      const p = this.bot.entity.position.floored()
-      const dir = [[1, 0], [-1, 0], [0, 1], [0, -1]][i % 4]
-      log('heading up to the surface from y', p.y)
-      await this.goto(new goals.GoalBlock(p.x + dir[0] * 6, p.y + 6, p.z + dir[1] * 6), 60000).catch(e => { if (e instanceof Interrupted) throw e; log('climb:', e.message) })
+      if (!scaffold()) {
+        const p = bot.entity.position.floored()
+        await this.goto(new goals.GoalBlock(p.x + 4, p.y + 4, p.z), 45000).catch(e => { if (e instanceof Interrupted) throw e })
+        continue
+      }
+      const feet = bot.entity.position.floored()
+      for (const dy of [2, 3]) {
+        const b = bot.blockAt(feet.offset(0, dy, 0))
+        if (b && b.boundingBox === 'block') {
+          if (b.name === 'water' || b.name === 'lava' || b.name === 'gravel' || b.name === 'sand') break
+          await bot.tool.equipForBlock(b, {}).catch(() => {})
+          await withTimeout(bot.dig(b, true), 20000, 'digging up').catch(() => {})
+        }
+      }
+      const above = bot.blockAt(feet.offset(0, 2, 0))
+      if (above && above.boundingBox === 'block') { log('climb: blocked by', above.name); break }
+      await bot.equip(this.item(scaffold()), 'hand')
+      bot.setControlState('jump', true)
+      // Wait until actually a block higher (slower when standing in water) before placing.
+      await this.waitFor(() => bot.entity.position.y > feet.y + 1.05, 1500)
+      const below = bot.blockAt(feet)
+      try { await bot.placeBlock(bot.blockAt(feet.offset(0, -1, 0)), new Vec3(0, 1, 0)) } catch (e) {}
+      bot.setControlState('jump', false)
+      await sleep(250)
+      if (bot.entity.position.y < feet.y + 0.5 && below) await sleep(200)
     }
   }
 

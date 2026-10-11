@@ -70,6 +70,7 @@ class Brain {
       if (this.pendingRecovery) { const r = this.pendingRecovery; this.pendingRecovery = null; await this.recoverItems(r).catch(e => log('recover:', e.message)); continue }
       const step = this.plan.find(g => !g.done())
       this.current = step.name
+      this.stepStarted = Date.now()
       const t = Date.now()
       try {
         await step.run()
@@ -96,6 +97,17 @@ class Brain {
 
   startReflexes () {
     setInterval(() => this.reflex().catch(e => log('reflex:', e.message)), 400)
+    // Watchdog: if one step runs over 5 minutes, something is stuck; cancel it and move on.
+    setInterval(() => {
+      if (this.stepStarted && Date.now() - this.stepStarted > 5 * 60 * 1000 && !this.reflexBusy) {
+        log('watchdog: step', this.current, 'is stuck, cancelling')
+        this.interrupt()
+        try { this.bot.stopDigging() } catch (e) {}
+        this.bot.clearControlStates()
+        this.stepStarted = Date.now()
+        setTimeout(() => { this.skills.interrupted = false }, 1500)
+      }
+    }, 10000)
   }
 
   interrupt () {

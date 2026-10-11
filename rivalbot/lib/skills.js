@@ -383,15 +383,25 @@ class Skills {
     }
   }
 
-  // Out of air: look up, swim straight up, and dig through anything overhead.
+  // Out of air. Like a player: head for the nearest air you can reach (often sideways, out of an
+  // underwater cave), and only dig straight up as a last resort, since digging underwater is slow.
   async swimUp () {
     const bot = this.bot
+    const airId = this.mcData.blocksByName.air.id
+    const air = bot.findBlocks({ matching: airId, maxDistance: 12, count: 40 })
+      .filter(p => { const below = bot.blockAt(p.offset(0, -1, 0)); return below && (below.name === 'water' || below.boundingBox === 'block') })
+    if (air.length) {
+      const target = air[0]
+      log('out of air: swimming to air at', target.toString())
+      try { await withTimeout(bot.pathfinder.goto(new goals.GoalNear(target.x, target.y, target.z, 1)), 9000, 'swimming to air') } catch (e) { log('swim:', e.message) } finally { bot.pathfinder.setGoal(null) }
+      if (!bot.entity.isInWater || bot.oxygenLevel >= 18) return
+    }
     await bot.look(bot.entity.yaw, Math.PI / 2, true).catch(() => {})
     bot.setControlState('jump', true)
-    const until = Date.now() + 10000
-    while (Date.now() < until && bot.health > 0 && (bot.entity.isInWater || bot.oxygenLevel < 20)) {
+    const until = Date.now() + 8000
+    while (Date.now() < until && bot.health > 0 && bot.entity.isInWater) {
       const above = bot.blockAt(bot.entity.position.offset(0, 2, 0))
-      if (above && above.boundingBox === 'block' && above.diggable) { await bot.dig(above, true).catch(() => {}) }
+      if (above && above.boundingBox === 'block' && above.diggable) { await bot.tool.equipForBlock(above, {}).catch(() => {}); await bot.dig(above, true).catch(() => {}) }
       await sleep(150)
     }
     bot.clearControlStates()

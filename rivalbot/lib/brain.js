@@ -116,7 +116,7 @@ class Brain {
     const surfaceNight = st.shelterAtNight && this.isNight() && me.y > 55 && !this.sheltered
 
     let action = null
-    if (bot.oxygenLevel !== undefined && bot.oxygenLevel < 10 && bot.entity.isInWater) action = async () => { log('out of air, swimming up'); await this.skills.swimUp() }
+    if (bot.oxygenLevel !== undefined && bot.oxygenLevel < 14 && bot.entity.isInWater) action = async () => { log('out of air, swimming up'); await this.skills.swimUp() }
     else if (creeper) action = async () => { log('creeper! backing off'); this.say.event('creeper'); await this.skills.backOff(creeper.position, 8) }
     else if (close && bot.health < st.retreatHealth) action = async () => { log('low health, retreating'); this.say.event('retreat'); await this.skills.backOff(close.position, 12); await this.eatIfPossible() }
     else if (close && st.fightBack) action = async () => { log('fighting', close.name); await this.skills.fight(close, 15000) }
@@ -150,7 +150,8 @@ class Brain {
     const pos = this.bot.entity ? this.bot.entity.position.clone() : null
     const lesson = this.memory.learnFromDeath(cause, { message: text, night: this.isNight(), doing: this.current, pos: pos && pos.floored().toArray() })
     log('died:', cause, '-', text)
-    this.lastDeath = { pos, at: Date.now(), dimension: this.bot.game.dimension }
+    // Items that fell in water or lava are gone or not worth dying for again.
+    this.lastDeath = ['drowning', 'lava'].includes(cause) ? null : { pos, at: Date.now(), dimension: this.bot.game.dimension }
     this.interrupt()
     this.say.event('death')
     if (lesson) setTimeout(() => this.say.line(lesson), 6000)
@@ -164,6 +165,8 @@ class Brain {
   // Run back for the items, like anyone would.
   async recoverItems (death) {
     if (this.bot.game.dimension !== death.dimension) return
+    const spot = this.bot.blockAt(death.pos)
+    if (spot && (spot.name === 'water' || spot.name === 'lava')) return
     const d = this.bot.entity.position.distanceTo(death.pos)
     if (d > 400) return
     log('going back for my stuff,', Math.round(d), 'blocks')

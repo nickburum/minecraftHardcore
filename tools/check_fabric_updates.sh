@@ -6,11 +6,11 @@
 # Minecraft version. Applying an update is a separate, manual step (see the end of the output).
 #
 #   tools/check_fabric_updates.sh [server dir] [staging dir]
-#   defaults: ~/vanilla  ~/fabric-updates
+#   defaults: ~/hardcore-fabric  ~/fabric-updates
 #
 # Needs curl and python3. Safe to run from cron once the owner has approved it.
 set -euo pipefail
-SERVER_DIR="${1:-$HOME/vanilla}"
+SERVER_DIR="${1:-$HOME/hardcore-fabric}"
 STAGING="${2:-$HOME/fabric-updates}"
 # Modrinth release channels to accept. Simple Voice Chat only ships "beta" builds for some versions.
 CHANNELS="${CHANNELS:-release,beta}"

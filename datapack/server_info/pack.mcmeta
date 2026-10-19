@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": [
+      {"text": "Server Info", "color": "gold", "bold": true},
+      {"text": "\nThe /info book: voice chat and custom recipes", "color": "gray"}
+    ],
+    "min_format": 88,
+    "max_format": 121
+  }
+}

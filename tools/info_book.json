@@ -1,0 +1,7 @@
+{
+  "_comment": "The /info book for the hardcore server. Edit this, then run: python3 tools/make_info_book.py",
+  "title": "Server Info",
+  "author": "The System",
+  "voice_chat_url": "https://modrinth.com/plugin/simple-voice-chat",
+  "fabric_url": "https://fabricmc.net/use/installer/"
+}

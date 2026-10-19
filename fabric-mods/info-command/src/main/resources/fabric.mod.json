@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "info_command",
+  "version": "1.0.0",
+  "name": "Info Command",
+  "description": "Adds /info, which gives the player the Server Info book from the server_info data pack.",
+  "license": "MIT",
+  "environment": "server",
+  "entrypoints": {"main": ["net.thehardcore.infocommand.InfoCommand"]},
+  "depends": {
+    "fabricloader": ">=0.19.0",
+    "fabric-command-api-v2": "*",
+    "minecraft": "~26.3"
+  }
+}

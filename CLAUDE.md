@@ -8,7 +8,7 @@ All three run on the same machine as separate Java processes, each in its own `s
 
 | Server | Folder on the host | Port | What it's for | Gets the data pack |
 |---|---|---|---|---|
-| Hardcore | `~/vanilla` (world `hardcore`) | 25565 | The real hardcore survival world | Yes, after it passes on creative |
+| Hardcore | `~/vanilla` (world `hardcore`); `~/hardcore-fabric` after the Fabric move | 25565 (voice chat: UDP 24454) | The real hardcore survival world | Yes, after it passes on creative, plus `server_info` |
 | Creative | `~/vanilla-creative` (world `creative`) | 25566 | Test server: try data pack changes here first | Yes, first |
 | Mod test | `~/modtest` (Fabric) | 25567 | Testing mods and data packs, recording videos | No. It gets the health inventory challenge, RivalBot and the bot race instead |
 
@@ -40,6 +40,20 @@ If you are running on the game server and were asked to install it, follow the s
 7. **Smoke test** (console or RCON):
    - `function elixir:admin/list` should print empty Fallen and Pending lists.
    - `give <op> minecraft:golden_apple` and `give <op> minecraft:potion[potion_contents={potion:"minecraft:weakness"}]`. Then have the operator craft the elixir and right-click it. It should say "No fallen champions await revival."
+
+## Moving the hardcore server to Fabric, voice chat and the /info book
+
+The full, step-by-step task is in `prompts/fabric-migration.md`. Follow it when asked to do the move. Its key rules:
+- Back up first and verify the backup.
+- Keep `level-name=hardcore`; a wrong name generates a new world.
+- Leave `~/vanilla` untouched as the rollback.
+- Never schedule the update checker without the owner's approval.
+
+Pieces from this repo:
+- `datapack/server_info`: the Server Info book. It's given on first join and by `/trigger info`. Edit the text in `tools/info_book.json` and `tools/make_info_book.py`, then run `python3 tools/make_info_book.py`.
+- `fabric-mods/info-command/info-command-1.0.0.jar`: adds `/info`, because a data pack can't add commands. Needs Fabric API. Rebuild with `fabric-mods/info-command/build.sh <fabric server dir>` (JDK 25).
+- Simple Voice Chat comes from Modrinth. It's optional for players (`force_voice_chat=false`). Voice uses UDP 24454, so friends need a second playit tunnel (UDP, to `127.0.0.1:24454`) and `voice_host` set to that tunnel's address in `config/voicechat/voicechat-server.properties`.
+- `tools/check_fabric_updates.sh`: downloads newer Fabric loader, Fabric API and Simple Voice Chat builds for the same Minecraft version into a staging folder, hash-checked. It never touches the running server.
 
 ## Installing the health inventory challenge (mod test server)
 

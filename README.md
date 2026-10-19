@@ -19,6 +19,23 @@ Restart the server afterwards; both are only read at startup.
 
 To change the text, edit `motd.txt` and run `python3 tools/make_server_icons.py <path to a Minecraft client .jar>`. That rebuilds the icons, previews and `motd.properties`, and warns if a line is too long to fit.
 
+## Fabric, voice chat and the /info book
+
+`prompts/fabric-migration.md` is a ready-to-paste prompt for Claude Code on the server. It moves the hardcore server to Fabric with a verified backup and a rollback, adds Simple Voice Chat, and installs the Server Info book.
+
+- **Server Info book** (`datapack/server_info`): new players get it on their first join, and anyone can get a new copy with `/info` or `/trigger info`. It covers:
+  - welcome text
+  - a clickable link to download Simple Voice Chat, with one line of setup
+  - the Elixir of Life recipe, where hovering shows the actual items
+  - how reviving works
+- **`/info` command** (`fabric-mods/info-command`): a tiny server-side Fabric mod, since a data pack can't add new commands.
+- **Update checker** (`tools/check_fabric_updates.sh`): stages newer Fabric loader, Fabric API and Simple Voice Chat builds for the same Minecraft version, with hash checks.
+
+Tested on a Fabric 26.3 server with Simple Voice Chat 2.6.24:
+- A client without mods joins and isn't kicked.
+- The book arrives on first join.
+- `/info` and `/trigger info` both hand out the book, which has the voice chat link and the item tooltips.
+
 ## RivalBot and Race the Bot
 
 A free bot (`rivalbot/`) that plays survival like a real player on the mod test server, learns from its deaths, and races you to the End. In the race data pack (`datapack/rival_race`), the System announcer roots for the bot and sabotages you. See [rivalbot/README.md](rivalbot/README.md) for what it can do so far and how to run it.

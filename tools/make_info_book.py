@@ -51,29 +51,42 @@ def item(text, item_id, components=None, color="dark_purple"):
     return {"text": text, "color": color, "underlined": True, "hover_event": item_hover(item_id, components)}
 
 pages = [
-    # Page 1: welcome and voice chat.
-    ["", t("Welcome!\n", bold=True, color="dark_red"),
-     t("One life. Make it count. Fallen players can be revived with the Elixir of Life (next page).\n\n"),
-     t("Voice chat\n", bold=True),
-     link("Get Simple Voice Chat", SPEC["voice_chat_url"], "Opens the download page"),
-     t("\nDownload the Fabric version, drop the jar into your mods folder, relaunch. Optional: you can play without it.", color="dark_gray")],
-    # Page 2: the Elixir of Life recipe.
-    ["", t("Custom recipe\n\n", bold=True, color="dark_purple"),
+    # Page 1: the three lives rule.
+    ["", t("Three Lives\n", bold=True, color="dark_red"),
+     t("This is hardcore with 3 lives. Every death costs one. Your name color shows how many you have:\n\n"),
+     t("Green", color="dark_green", bold=True), t(" 3 lives\n"),
+     t("Yellow", color="gold", bold=True), t(" 2 lives\n"),
+     t("Red", color="red", bold=True), t(" last life\n"),
+     t("Gray", color="dark_gray", bold=True), t(" out")],
+    # Page 2: dying.
+    ["", t("When you die\n\n", bold=True, color="dark_red"),
+     t("Click "), t("Spectate World", italic=True),
+     t(". You come back at your bed (or spawn) on your next life.\n\n"),
+     t("Lose your last life and you're out: a spectator until a friend gives up a life for you.")],
+    # Page 3: the Elixir of Life recipe.
+    ["", t("Elixir of Life\n\n", bold=True, color="dark_purple"),
      item("Elixir of Life", "minecraft:carrot_on_a_stick", elixir_components),
      t("\n\n= "),
      item("Golden Apple", "minecraft:golden_apple", None, color="gold"),
      t("\n+ "),
      item("Potion of Weakness", "minecraft:potion", weakness, color="dark_aqua"),
      t("\n\nAny crafting grid. Hover over the names to see the items.", color="dark_gray")],
-    # Page 3: how reviving works.
-    ["", t("Reviving\n\n", bold=True, color="dark_purple"),
+    # Page 4: saving someone.
+    ["", t("Saving a friend\n\n", bold=True, color="dark_purple"),
      t("Hold the "), item("Elixir", "minecraft:carrot_on_a_stick", elixir_components),
-     t(" and right-click. Pick a fallen player from the menu.\n\nThey return at their bed with 15 seconds of protection. Offline players return when they next join.")],
-    # Page 4: commands and tips.
+     t(", right-click, pick who to bring back and confirm.\n\n"),
+     t("It costs one of YOUR lives", color="red"),
+     t(", so you need at least 2. They come back on their last life.")],
+    # Page 5: voice chat.
+    ["", t("Voice chat\n\n", bold=True, color="dark_blue"),
+     link("Get Simple Voice Chat", SPEC["voice_chat_url"], "Opens the download page"),
+     t("\n\nDownload the Fabric version, drop the jar into your mods folder, relaunch.\n\n"),
+     t("Optional: you can play without it.", color="dark_gray")],
+    # Page 6: good to know.
     ["", t("Good to know\n\n", bold=True, color="dark_red"),
      t("/info", color="dark_green"), t(" gives you this book again.\n\n"),
-     t("A fallen player must click "), t("Spectate World", italic=True), t(" before they can be revived.\n\n"),
-     t("The wrong potion turns the elixir back into a golden apple.", color="dark_gray")],
+     t("Everyone's lives are shown in the tab list.\n\n"),
+     t("Craft the elixir with the wrong potion and you just get the golden apple back.", color="dark_gray")],
 ]
 
 content = {"title": SPEC["title"], "author": SPEC["author"], "pages": pages}

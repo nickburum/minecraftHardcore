@@ -1,6 +1,6 @@
 # Notes for Claude Code
 
-This repo holds add-ons for a Minecraft **Java Edition** hardcore server. The main piece is the Elixir of Life data pack (see README.md for what it does). It also has the server-list icon and description for all three servers, in `server/`.
+This repo holds add-ons for a Minecraft **Java Edition** hardcore server. The main piece is the Three Lives + Elixir of Life data pack in `datapack/elixir_of_life` (see README.md for what it does). It also has the server-list icon and description for all three servers, in `server/`.
 
 ## The servers
 
@@ -30,16 +30,13 @@ If you are running on the game server and were asked to install it, follow the s
 5. **Set the fallback spawn.** Ask an operator in game to stand at world spawn and run `/function elixir:admin/set_world_spawn`.
    - From the console, use this instead, with the world spawn coordinates:
      `data modify storage elixir:data world_spawn set value {dimension:"minecraft:overworld",x:X,y:Y,z:Z}`
-6. **Resource pack (announcer voice).** This step is optional, and everything else works without it.
-   - Run `python3 tools/make_voices.py --build` to build `dist/elixir_of_life_resourcepack.zip`. The command prints the SHA-1.
-   - The zip needs a **public direct-download URL**. It is hosted as a GitHub release on this repo (tags `resourcepack-v1`, `resourcepack-v2`, …). Publish each rebuilt zip as a new release, because the SHA-1 changes, and confirm the download's SHA-1 matches before you set it.
-   - Then set these in `server.properties` and restart:
-     - `resource-pack=<url>`
-     - `resource-pack-sha1=<sha1>`
-     - `require-resource-pack=false`
+6. **No resource pack.** The old announcer voice pack is gone. If `server.properties` still has `resource-pack=` or `resource-pack-sha1=` set to it, clear both lines and restart (ask the owner first).
 7. **Smoke test** (console or RCON):
    - `function elixir:admin/list` should print empty Fallen and Pending lists.
+   - `scoreboard players list <op>` should show `elixir.lives` = 3, and the tab list should show everyone's lives with green names.
    - `give <op> minecraft:golden_apple` and `give <op> minecraft:potion[potion_contents={potion:"minecraft:weakness"}]`. Then have the operator craft the elixir and right-click it. It should say "No fallen champions await revival."
+
+The pack is **Three Lives**: every death costs a life, players with lives left are put back into Survival automatically after they click "Spectate World", and a player who is out can be brought back by someone with 2+ lives giving one up through the Elixir of Life (with a confirm popup). The first load resets everyone, including the dead, to 3 lives (the "epoch" in `lives/new_epoch.mcfunction`). Don't bump the epoch again unless the owner asks for another reset.
 
 ## Moving the hardcore server to Fabric, voice chat and the /info book
 
@@ -106,5 +103,4 @@ Replace `<world>/datapacks/elixir_of_life` with the new copy and run `/reload`. 
   - Player ids live in the `elixir.id` scoreboard.
   - The fallen list, the menu buttons and pending revives are kept in `storage elixir:data`.
 - 26.3 changed some JSON formats (loot `functions`→`modifier`, `function`→`type`, recipe_crafted `recipe_id`→`recipes`, potion predicate). Any advancement, loot table or item modifier you change must also be changed in `overlay_26_3/`.
-- After you change a voice line or `tools/players.txt`, run `python3 tools/make_voices.py`. It rewrites `announce/voice_map.mcfunction` and the resource pack sounds.
-- Test with `tests/e2e.js`, which runs two bot players against a real server. Mineflayer supports up to 26.1, so 26.2 and 26.3 can only be load-tested.
+- Test with `tests/e2e.js` (two bot players on a real hardcore server) and `tests/parse_check.py` (every command through a live server's parser). Mineflayer supports up to 26.1, so 26.2 and 26.3 can only be load-tested.

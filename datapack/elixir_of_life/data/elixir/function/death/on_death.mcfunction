@@ -1,10 +1,6 @@
-# As the player who just died, at their death position.
+# As the player who just died, at their death position. Every death costs a life.
 scoreboard players reset @s elixir.deaths
-tag @s add elixir.fallen
-
-function elixir:util/get_name
-execute store result storage elixir:tmp entry.id int 1 run scoreboard players get @s elixir.id
-data modify storage elixir:tmp entry.name set from storage elixir:tmp name
-function elixir:death/register with storage elixir:tmp entry
-
-function elixir:announce/fallen
+scoreboard players remove @s elixir.lives 1
+execute if score @s elixir.lives matches ..0 run return run function elixir:lives/out
+tag @s add elixir.respawning
+function elixir:announce/lost_life

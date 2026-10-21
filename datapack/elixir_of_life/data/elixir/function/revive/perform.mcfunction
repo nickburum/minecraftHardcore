@@ -10,6 +10,8 @@ execute unless data storage elixir:tmp target.name run data modify storage elixi
 function elixir:death/unregister with storage elixir:tmp req
 
 gamemode survival @s
+# Back from being out: on their last life, red name.
+scoreboard players set @s elixir.lives 1
 function elixir:revive/teleport
 function elixir:revive/protect
 # Announce to everyone first, so the revived player's own notice replaces it on their screen.

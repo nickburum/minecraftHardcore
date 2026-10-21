@@ -11,7 +11,7 @@ Both challenges run on the mod test server, which can only send players one
 resource pack, so --build also zips them together as dist/modtest_resourcepack.zip.
 
 Needs ffmpeg and Piper TTS (pip install piper-tts). Reuses the voice model
-cache from tools/make_voices.py.
+cache in tools/.cache (see voice_common.py).
 
     python3 tools/make_announcer.py               # regenerate every challenge, then zip
     python3 tools/make_announcer.py race          # regenerate one challenge, then zip
@@ -28,7 +28,7 @@ import zipfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from make_voices import model_paths, zip_dir  # noqa: E402
+from voice_common import model_paths, zip_dir  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"

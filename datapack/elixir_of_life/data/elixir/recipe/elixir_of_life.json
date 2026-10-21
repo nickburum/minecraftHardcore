@@ -20,12 +20,17 @@
       "minecraft:enchantment_glint_override": true,
       "minecraft:lore": [
         {
-          "text": "Returns a fallen champion to the realm.",
+          "text": "Brings back a player who is out of lives.",
           "color": "gray",
           "italic": false
         },
         {
-          "text": "Right-click to choose who to revive.",
+          "text": "Costs one of your own lives to use.",
+          "color": "red",
+          "italic": false
+        },
+        {
+          "text": "Right-click to choose who.",
           "color": "yellow",
           "italic": false
         }

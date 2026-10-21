@@ -2,12 +2,12 @@
   "pack": {
     "description": [
       {
-        "text": "Elixir of Life",
+        "text": "Three Lives",
         "color": "gold",
         "bold": true
       },
       {
-        "text": "\nRevive fallen hardcore champions",
+        "text": "\nHardcore with 3 lives and the Elixir of Life",
         "color": "gray"
       }
     ],

@@ -9,10 +9,10 @@ All three run on the same machine as separate Java processes, each in its own `s
 | Server | Folder on the host | Port | What it's for | Gets the data pack |
 |---|---|---|---|---|
 | Hardcore | `~/vanilla` (world `hardcore`); `~/hardcore-fabric` after the Fabric move | 25565 (voice chat: UDP 24454) | The real hardcore survival world | Yes, after it passes on creative, plus `server_info` |
-| Creative | `~/vanilla-creative` (world `creative`) | 25566 | Test server: try data pack changes here first | Yes, first |
+| Creative | `~/vanilla-creative` (world `creative`), Fabric 26.3 | 25566 (voice chat: UDP 24455) | Normal creative play with voice chat; also where data pack changes are tried first | Only while testing. It normally runs `server_info_creative` (the voice chat book) and no Three Lives pack |
 | Mod test | `~/modtest` (Fabric) | 25567 | Testing mods and data packs, recording videos | No. It gets the health inventory challenge, RivalBot and the bot race instead |
 
-Test every data pack change on the creative server before putting it on hardcore. Hardcore deaths are permanent, so a broken pack there can cost players their run.
+Test every data pack change on the creative server before putting it on hardcore. Hardcore deaths are permanent, so a broken pack there can cost players their run. People play on creative normally, so remove a test pack from creative again when you're done (run its `admin/uninstall` function if it has one, then `/datapack disable` and move the folder out).
 
 If you are running on the game server and were asked to install it, follow the steps below. Ask the owner before restarting the server or changing `server.properties`, because players may be online.
 
@@ -47,9 +47,12 @@ The full, step-by-step task is in `prompts/fabric-migration.md`. Follow it when 
 - Never schedule the update checker without the owner's approval.
 
 Pieces from this repo:
-- `datapack/server_info`: the Server Info book. It's given on first join and by `/trigger info`. Edit the text in `tools/info_book.json` and `tools/make_info_book.py`, then run `python3 tools/make_info_book.py`.
+- `datapack/server_info`: the hardcore Server Info book (Three Lives rules, the elixir, then a step-by-step voice chat guide). `datapack/server_info_creative`: the creative server's book (only the voice chat guide). Both use the `info` namespace, so a world gets one or the other, never both. They're given on first join and by `/trigger info` (or `/info` with the mod). Edit the text in `tools/info_book.json` and `tools/make_info_book.py`, then run `python3 tools/make_info_book.py`, which rebuilds both. The voice chat guide names no Minecraft or mod version on purpose, so it doesn't need updating when the servers update.
+  - To give everyone the new book after an update, run `scoreboard players reset * info.joined` after the `/reload`; each player gets a fresh copy on their next join.
 - `fabric-mods/info-command/info-command-1.0.0.jar`: adds `/info`, because a data pack can't add commands. Needs Fabric API. Rebuild with `fabric-mods/info-command/build.sh <fabric server dir>` (JDK 25).
-- Simple Voice Chat comes from Modrinth. It's optional for players (`force_voice_chat=false`). Voice uses UDP 24454, so friends need a second playit tunnel (UDP, to `127.0.0.1:24454`) and `voice_host` set to that tunnel's address in `config/voicechat/voicechat-server.properties`.
+- Simple Voice Chat comes from Modrinth. It's optional for players (`force_voice_chat=false`). Each server with voice chat needs its own UDP port and its own playit UDP tunnel, with `voice_host` set to that tunnel's address in `config/voicechat/voicechat-server.properties`:
+  - Hardcore: UDP 24454, tunnel `traded-reading.tun.ply.gg:7737`.
+  - Creative: UDP 24455, tunnel `signaling-alice.tun.ply.gg:17370`. Creative runs the same Fabric loader, Fabric API, Simple Voice Chat and info-command jars as hardcore; its Fabric launcher is saved as `server.jar` (the old vanilla jar is `server.jar.vanilla-26.3`).
 - `tools/check_fabric_updates.sh`: downloads newer Fabric loader, Fabric API and Simple Voice Chat builds for the same Minecraft version into a staging folder, hash-checked. It never touches the running server.
 
 ## Installing the health inventory challenge (mod test server)

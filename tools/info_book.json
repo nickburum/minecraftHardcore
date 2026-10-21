@@ -1,5 +1,5 @@
 {
-  "_comment": "The /info book for the hardcore server. Edit this, then run: python3 tools/make_info_book.py",
+  "_comment": "The /info books for the hardcore and creative servers. Edit this, then run: python3 tools/make_info_book.py. The voice chat steps name no Minecraft version, so they don't need updating when the servers update.",
   "title": "Server Info",
   "author": "The System",
   "voice_chat_url": "https://modrinth.com/plugin/simple-voice-chat",

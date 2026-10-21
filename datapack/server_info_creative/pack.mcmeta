@@ -1,0 +1,17 @@
+{
+  "pack": {
+    "description": [
+      {
+        "text": "Server Info (creative)",
+        "color": "gold",
+        "bold": true
+      },
+      {
+        "text": "\nThe /info book: voice chat",
+        "color": "gray"
+      }
+    ],
+    "min_format": 88,
+    "max_format": 121
+  }
+}
